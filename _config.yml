@@ -29,14 +29,15 @@ url: ""
 github:
   username: anandhkrishnam # change to your GitHub username
 
- # change to your Twitter username
+  # change to your Twitter username
 
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
   name: Anandh Krishna Murichatta
-  email: anandh [Dot] krishna [Underscroll] m [At] students [dot] iiserpune [dot] in
-         anandh [Dot] krishna [Underscroll] m [At] daad [Dot] alumni [Dot] in # change to your email address
+  email:
+    anandh [Dot] krishna [Underscroll] m [At] students [dot] iiserpune [dot] in
+    anandh [Dot] krishna [Underscroll] m [At] daad [Dot] alumni [Dot] in # change to your email address
   links:
     # The first element serves as the copyright owner's link
     - https://github.com/anandhkrishnam # change to your GitHub homepage
@@ -98,8 +99,7 @@ theme_mode: Light
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar:
-
+avatar: "/assets/images/avatar.jpg" # update the path to where your image is located in the repository
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
 social_preview_image: # string, local or CORS resources

@@ -1,4 +1,6 @@
 ---
 layout: page
-title: My New Page
+title: Testing Page
+description: This is a test page
+math : True
 ---

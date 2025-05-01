@@ -89,7 +89,7 @@ pageviews:
 #     light — Use the light color scheme
 #     dark — Use the dark color scheme
 #
-theme_mode: Light
+theme_mode: dark
 
 # The CDN endpoint for media resources.
 # Notice that once it is assigned, the CDN url
@@ -214,7 +214,7 @@ exclude:
   - purgecss.js
   - rollup.config.js
   - "package*.json"
-  
+
 jekyll compose:
 default_front_matter:
     drafts:

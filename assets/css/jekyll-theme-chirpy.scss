@@ -1,0 +1,23 @@
+---
+---
+
+@use 'main
+{%- if jekyll.environment == 'production' -%}
+  .bundle
+{%- endif -%}
+';
+
+body{
+  background:
+    linear-gradient(
+      rgba(0, 0, 0, 0.923),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url('/assets/img/background.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 1;
+}
+

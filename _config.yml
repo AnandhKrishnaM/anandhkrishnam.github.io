@@ -24,7 +24,7 @@ description: >- # used by seo meta and the atom feed
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
-url: ""
+url: "https://anandhkrishnam.github.io"
 
 github:
   username: anandhkrishnam # change to your GitHub username
@@ -217,18 +217,18 @@ exclude:
 
 jekyll compose:
 default_front_matter:
-    drafts:
-      description:
-      image:
-      category:
-      tags:
-    posts:
-      description:
-      image:
-      category:
-      tags:
-      published: false
-      sitemap: false
+  drafts:
+    description:
+    image:
+    category:
+    tags:
+  posts:
+    description:
+    image:
+    category:
+    tags:
+    published: false
+    sitemap: false
 
 jekyll-archives:
   enabled: [categories, tags]

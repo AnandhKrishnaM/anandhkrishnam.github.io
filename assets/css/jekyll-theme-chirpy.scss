@@ -7,6 +7,10 @@
 {%- endif -%}
 ';
 
+footer {
+  display: none !important;
+}
+
 body{
   background:
     linear-gradient(

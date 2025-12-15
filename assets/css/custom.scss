@@ -7,7 +7,7 @@
 
 /* Common glass effect */
 .glass {
-  background: rgba(20, 20, 20, 0.45) !important;
+  background: rgba(30, 30,30, 0.35) !important;
   backdrop-filter: blur(14px) saturate(120%);
   -webkit-backdrop-filter: blur(14px) saturate(120%);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -33,4 +33,70 @@
 #sidebar,
 .panel {
   border-radius: 16px;
+}
+
+/* ===== FROSTED GLASS POST CARDS (HOMEPAGE) ===== */
+
+/* Homepage post cards */
+.card,
+.post-preview {
+  background: rgba(30, 30, 30, 0.35) !important;
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  border-radius: 18px;
+}
+
+/* Card hover effect */
+.card:hover {
+  background: rgba(25, 25, 25, 0.55) !important;
+  transform: translateY(-2px);
+  transition: all 0.25s ease;
+}
+
+/* Keep text readable */
+.card *,
+.post-preview * {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* Remove default Chirpy card background */
+.card {
+  background-clip: padding-box;
+}
+
+/* ===== ACADEMIC SERIF FONT STACK ===== */
+
+body {
+  font-family:
+    "Merriweather",
+    "Book Antiqua",
+    Palatino,
+    "Palatino Linotype",
+    "Palatino LT STD",
+    Georgia,
+    serif !important;
+}
+
+/* Headings slightly heavier */
+h1, h2, h3, h4, h5, h6 {
+  font-family:
+    "Merriweather",
+    "Book Antiqua",
+    Palatino,
+    "Palatino Linotype",
+    "Palatino LT STD",
+    Georgia,
+    serif !important;
+
+  font-weight: 700;
+}
+
+/* Sidebar & UI text a bit lighter */
+#sidebar,
+#panel-wrapper,
+.nav,
+.footer {
+  font-weight: 400;
 }

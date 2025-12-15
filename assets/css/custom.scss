@@ -1,11 +1,5 @@
-/* Make footer transparent */
+
 #tail-wrapper {
-  background-color: transparent !important;
-  border-top: none !important;
+  display: none !important;
 }
 
-/* Hide footer text/icons but keep spacing */
-#tail-wrapper footer,
-#tail-wrapper footer * {
-  color: transparent !important;
-}

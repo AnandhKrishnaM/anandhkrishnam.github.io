@@ -3,11 +3,12 @@
 
 @use 'main
 {%- if jekyll.environment == 'production' -%}
-  .bundle
+.bundle
 {%- endif -%}
 ';
 
-body{
+/* Your background styling */
+body {
   background:
     linear-gradient(
       rgba(0, 0, 0, 0.923),
@@ -18,7 +19,7 @@ body{
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 1;
 }
 
+/* Import custom overrides LAST */
 @import 'custom';

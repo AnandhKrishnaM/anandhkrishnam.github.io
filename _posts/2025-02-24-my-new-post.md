@@ -1,12 +1,14 @@
 ---
-layout: post
 title: Testing Model 
 description: This is a test page
-date: '2025-02-24 11:41:22 +0530'
+date: 2025-12-15 20:00:00 +0530
 math : True
-pin: True
+categories: [GR]
+tags: [geodesics, memory]
+toc : true
 ---
-* Geodesic Equation EQN
+
+# Geodesic Equation EQN
 
 $$ \frac{d^2 x^\mu}{d \lambda^2} + \Gamma^\mu_{\alpha \beta} \frac{d x^\alpha }{d \lambda} \frac{d x^\beta}{d\lambda} = 0$$
 
@@ -15,3 +17,12 @@ $$ \frac{d^2 x^\mu}{d \lambda^2} + \Gamma^\mu_{\alpha \beta} \frac{d x^\alpha }{
 where $$ \xi^\mu$$ is the deviation vector and $$ \frac{D}{d \lambda}$$ is the covariant derivative along the geodesic path. This equation is called Jacobi equation.
 
 ![Alt text](/assets/img/background.png "Optional title")
+
+# Another Section
+## Introduction
+### Bondi Gauge
+### Einstein Equations
+## Gravitational Memory
+
+
+Hello world!

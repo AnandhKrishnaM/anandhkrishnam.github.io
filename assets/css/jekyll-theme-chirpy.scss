@@ -21,13 +21,4 @@ body{
   opacity: 1;
 }
 
-/* Hide footer content but keep layout spacing */
-footer.site-footer,
-#tail-wrapper {
-  background: transparent !important;
-  border-top: none !important;
-}
-
-footer.site-footer * {
-  display: none !important;
-}
+@import 'custom';

@@ -3,3 +3,34 @@
   display: none !important;
 }
 
+/* ===== FROSTED GLASS SIDEBARS (CHIRPY) ===== */
+
+/* Common glass effect */
+.glass {
+  background: rgba(20, 20, 20, 0.45) !important;
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+/* Left sidebar */
+#sidebar {
+  @extend .glass;
+}
+
+/* Right sidebar container */
+#panel-wrapper {
+  background: transparent !important;
+}
+
+/* Individual right panels (Recent, Tags, etc.) */
+.panel {
+  @extend .glass;
+}
+
+/* Remove hard edges */
+#sidebar,
+.panel {
+  border-radius: 16px;
+}

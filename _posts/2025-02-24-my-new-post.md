@@ -4,6 +4,7 @@ title: Testing Model
 description: This is a test page
 date: '2025-02-24 11:41:22 +0530'
 math : True
+pin: true
 ---
 * Geodesic Equation EQN
 

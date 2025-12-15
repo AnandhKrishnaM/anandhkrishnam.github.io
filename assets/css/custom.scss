@@ -1,4 +1,3 @@
-
 #tail-wrapper {
   display: none !important;
 }
@@ -7,8 +6,8 @@
 
 /* Common glass effect */
 .glass {
-  background: rgba(30, 30,30, 0.35) !important;
-  backdrop-filter: blur(14px) saturate(120%);
+  background: rgba(30, 30, 30, 0.35) !important;
+  backdrop-filter: blur(11px) saturate(120%);
   -webkit-backdrop-filter: blur(14px) saturate(120%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
@@ -69,26 +68,19 @@
 /* ===== ACADEMIC SERIF FONT STACK ===== */
 
 body {
-  font-family:
-    "Merriweather",
-    "Book Antiqua",
-    Palatino,
-    "Palatino Linotype",
-    "Palatino LT STD",
-    Georgia,
-    serif !important;
+  font-family: 'Merriweather', 'Book Antiqua', Palatino, 'Palatino Linotype',
+    'Palatino LT STD', Georgia, serif !important;
 }
 
 /* Headings slightly heavier */
-h1, h2, h3, h4, h5, h6 {
-  font-family:
-    "Merriweather",
-    "Book Antiqua",
-    Palatino,
-    "Palatino Linotype",
-    "Palatino LT STD",
-    Georgia,
-    serif !important;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Merriweather', 'Book Antiqua', Palatino, 'Palatino Linotype',
+    'Palatino LT STD', Georgia, serif !important;
 
   font-weight: 700;
 }
@@ -99,4 +91,17 @@ h1, h2, h3, h4, h5, h6 {
 .nav,
 .footer {
   font-weight: 400;
+}
+
+body {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+#sidebar,
+#panel-wrapper,
+nav {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.9rem;
 }

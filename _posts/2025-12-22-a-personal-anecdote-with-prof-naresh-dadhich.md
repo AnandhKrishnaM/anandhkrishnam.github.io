@@ -8,7 +8,7 @@ excerpt: >
   A memorable encounter with Prof. Naresh Dadhich that left a lasting impression on my journey in theoretical physics.
 pin: true
 ---
-This is a post in memory of Prof. Naresh Dadhich and I would like to share a personal anecdote that highlights his influence on my academic journey.This is my first blog writing here. I was confused about how to start writing a blog post. So, I decided to share a personal anecdote about my interaction with Prof. Naresh Dadhich. 
+This is a post in memory of Prof. Naresh Dadhich and I would like to share a personal anecdote that highlights his influence on my academic journey. This is my first blog writing here. I was confused about how to start writing a blog post. So, I decided to share a personal anecdote about my interaction with Prof. Naresh Dadhich. 
 
 I write this post to preserve a personal memory and intellectual influence of Prof. Naresh Dadhich, whose guidance and way of thinking shaped my approach to general relativity and gravitational physics and life in general.
 

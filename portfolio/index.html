@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anandh Krishna Murichatta | Theoretical Physicist</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap"
+      rel="stylesheet"
+    >
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap"
+      rel="stylesheet"
+    >
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap"
+      rel="stylesheet"
+    >
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <style>
+      /* --- 1. VARIABLES & BASE --- */
+      :root {
+        --bg-color: #0d1117; /* GitHub Dark */
+        --text-color: #e6edf3;
+        --accent-color: #58a6ff;
+        --secondary-text: #a8b3cf;
+        --card-bg: rgba(22, 27, 34, 0.7);
+        --card-border: #30363d;
+        --card-hover: rgba(88, 166, 255, 0.08);
+        --shadow-strong: 0 10px 30px rgba(0, 0, 0, 0.4);
+        --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+
+      [data-theme='light'] {
+        --bg-color: #ffffff;
+        --text-color: #24292f;
+        --accent-color: #0366d6;
+        --secondary-text: #57606a;
+        --card-bg: rgba(246, 248, 250, 0.85);
+        --card-border: #eaecef;
+        --card-hover: rgba(3, 102, 214, 0.05);
+        --shadow-strong: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-inter);
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        overflow-x: hidden;
+        transition: background-color 0.5s ease, color 0.5s ease;
+        line-height: 1.6;
+      }
+
+      /* --- 2. LAYOUT & STRUCTURE --- */
+      #canvas-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.7;
+        pointer-events: none; /* Allows clicking through the canvas */
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      section {
+        min-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 120px 0 60px 0;
+        position: relative;
+      }
+
+      /* --- 3. NAVIGATION --- */
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        padding: 15px 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        backdrop-filter: blur(12px);
+        background-color: var(--card-bg);
+        border-bottom: 1px solid var(--card-border);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 25px;
+        margin-left: auto; /* Pushes nav to the right if needed */
+        margin-right: 20px;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--secondary-text);
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: color 0.3s;
+        position: relative;
+      }
+
+      .nav-links a:hover {
+        color: var(--text-color);
+      }
+
+      .nav-links a.active {
+        color: var(--accent-color);
+        font-weight: 600;
+      }
+
+      .nav-links a.active::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        bottom: -5px;
+        left: 0;
+        background-color: var(--accent-color);
+        transition: width 0.3s;
+      }
+
+      .theme-toggle {
+        cursor: pointer;
+        font-size: 1.1rem;
+        color: var(--secondary-text);
+        transition: color 0.3s;
+      }
+      .theme-toggle:hover {
+        color: var(--accent-color);
+      }
+
+      /* --- 4. HERO SECTION --- */
+      .hero h1 {
+        font-size: clamp(3rem, 7vw, 5.5rem);
+        line-height: 1.05;
+        margin-bottom: 15px;
+        font-weight: 900;
+        background: linear-gradient(90deg, var(--text-color) 40%, var(--accent-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero h2 {
+        font-size: 1.75rem;
+        color: var(--accent-color);
+        font-weight: 500;
+        margin-bottom: 5px;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+        color: var(--secondary-text);
+        max-width: 700px;
+        margin-bottom: 40px;
+      }
+
+      .btn {
+        padding: 12px 25px;
+        background: transparent;
+        border: 1px solid var(--accent-color);
+        color: var(--accent-color);
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        cursor: pointer;
+        border-radius: 4px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn:hover {
+        background: var(--accent-color);
+        color: var(--bg-color);
+        box-shadow: 0 0 15px var(--accent-color);
+      }
+
+      /* --- 5. SECTION HEADERS --- */
+      .section-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        margin-bottom: 60px;
+        position: relative;
+        display: inline-block;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+
+      .section-title::before {
+        content: '>';
+        color: var(--accent-color);
+        margin-right: 10px;
+      }
+
+      /* --- 6. CARDS & GRID --- */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 20px;
+        justify-content: center;
+      }
+      /* Makes a card span the full width of the container but stay centered with a max-width */
+      .card-centered {
+        grid-column: 1 / -1; /* Forces the card to span all columns */
+        width: 100%;
+        max-width: 600px; /* Keeps it from getting too wide/ugly */
+        margin: 0 auto; /* Centers the card horizontally */
+      }
+      #skills .grid,
+      #awards .grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      }
+
+      .card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        padding: 30px;
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+        box-shadow: var(--shadow-strong);
+      }
+
+      .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+        background: var(--card-hover);
+      }
+
+      .card h3 {
+        font-size: 1.35rem;
+        margin-bottom: 10px;
+        color: var(--accent-color);
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .card h4 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--text-color);
+      }
+
+      .card p,
+      .card ul {
+        font-size: 0.95rem;
+        color: var(--secondary-text);
+        line-height: 1.6;
+      }
+
+      .card ul {
+        padding-left: 20px;
+      }
+
+      .card ul li {
+        margin-bottom: 8px;
+      }
+
+      .tag {
+        display: inline-block;
+        padding: 5px 12px;
+        background-color: var(--card-border);
+        border-radius: 4px;
+        font-size: 0.8rem;
+        margin: 5px 5px 0 0;
+        color: var(--text-color);
+        font-family: monospace;
+      }
+
+      /* --- 7. TIMELINE --- */
+      .timeline {
+        position: relative;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .timeline-item {
+        padding: 0 0 40px 30px;
+        position: relative;
+      }
+
+      .timeline-item h3 {
+        font-size: 1.2rem;
+        color: var(--text-color);
+        margin-bottom: 5px;
+        font-weight: 700;
+      }
+
+      .timeline-item h4 {
+        font-size: 1rem;
+        color: var(--accent-color);
+        margin-bottom: 5px;
+        font-weight: 500;
+      }
+
+      .date {
+        font-family: monospace;
+        color: var(--secondary-text);
+        font-size: 0.85rem;
+        display: block;
+        margin-bottom: 10px;
+      }
+      .timeline-item:not(:last-child)::before {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 0;
+        width: 2px;
+        height: 100%;
+        background: var(--card-border); /* Default dim color */
+        transition: background 0.5s ease, box-shadow 0.5s ease; /* Smooth change */
+      }
+      .timeline-item::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 5px;
+        width: 12px;
+        height: 12px;
+        background: var(--card-bg); /* Start dark */
+        border: 2px solid var(--accent-color);
+        border-radius: 50%;
+        z-index: 10;
+        box-shadow: none;
+        transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+      }
+      .timeline-item.active:not(:last-child)::before {
+        background: var(--accent-color); /* Line turns blue */
+        box-shadow: 0 0 8px var(--accent-color); /* Line glows */
+      }
+
+      .timeline-item.active::after {
+        background: var(--accent-color); /* Dot fills up */
+        box-shadow: 0 0 15px var(--accent-color); /* Dot glows strongly */
+        transform: scale(1.2); /* Dot grows slightly */
+        border-color: var(--bg-color); /* Optional: makes it look crisp */
+      }
+      footer {
+        text-align: center;
+        padding: 50px;
+        border-top: 1px solid var(--card-border);
+        color: var(--secondary-text);
+        font-size: 0.9rem;
+      }
+
+      /* --- 8. TYPOGRAPHY CLASSES (FIXED) --- */
+      .sanskrit-text {
+        font-family: 'Noto Sans Devanagari', 'Mangal', sans-serif;
+        font-size: 24px;
+      }
+
+      .malayalam-text {
+        font-family: 'Noto Sans Malayalam', 'AnjaliOldLipi', sans-serif;
+        font-size: 1.1rem; /* Adjusted for navbar */
+        color: var(--text-color);
+        font-weight: 500;
+      }
+
+      /* UPDATED SERIF STACK */
+      .serif-content {
+        font-family: 'Merriweather', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+        font-weight: 400; /* Merriweather is quite bold by default, 400 is usually better for body text */
+        font-variant-ligatures: common-ligatures;
+        line-height: 1.8;
+      }
+
+      .serif-content strong {
+        font-weight: 700;
+      }
+
+      /* --- 9. MEDIA QUERIES --- */
+      @media (max-width: 1000px) {
+        /* Hide the malayalam text on smaller screens to save space */
+        .malayalam-text {
+          display: none;
+        }
+      }
+
+      @media (max-width: 900px) {
+        nav {
+          padding: 15px 20px;
+        }
+        .nav-links {
+          gap: 15px;
+        }
+        .hero h1 {
+          font-size: 4rem;
+        }
+        .section-title {
+          margin-bottom: 40px;
+        }
+        section {
+          min-height: auto;
+          padding: 80px 0 40px 0;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .nav-links {
+          display: none; /* In a real app, replace with a hamburger menu */
+        }
+        .hero h1 {
+          font-size: 3rem;
+        }
+        .hero h2 {
+          font-size: 1.5rem;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .card {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body data-theme="dark">
+    <div id="canvas-container"></div>
+
+    <nav>
+      <div class="malayalam-text">അനന്തം ഈ സാഗരം.... ദിക്കുകൾക്കുമപ്പുറം, കാലങ്ങൾക്കുമപ്പുറം...</div>
+
+      <div class="nav-links">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#research" class="nav-link">Research Foci</a>
+        <a href="#experience" class="nav-link">Worldline</a>
+        <a href="#skills" class="nav-link">Skills</a>
+        <a href="#awards" class="nav-link">Awards</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-sun" title="Toggle Light/Dark Theme"></i>
+      </div>
+    </nav>
+    <main class="container">
+      <section id="home" class="hero">
+        <h2>Perseverance</h2>
+        <h1>
+          Anandh Krishna<br>
+          Murichatta
+        </h1>
+        <p style="font-style: italic; margin-top: 20px;">
+          Charting the uncharted territory of reality through the glasses fused with mathematical rigor and the vision
+          guided by the physical intuition
+        </p>
+
+        <p style="font-size: 1rem; margin-top: -30px; margin-bottom: 40px; color: var(--accent-color); font-weight: 500;">
+          BS-MS Dual Degree, IISER Pune | DAAD WISE Fellow, Max Planck Institute for Gravitational Physics (AEI) | IUCAA
+          Pune
+        </p>
+        <div style="display: flex; gap: 20px;">
+          <a href="#research" class="btn"><i class="fas fa-microscope"></i> Research Focus</a>
+          <a href="https://github.com/AnandhKrishnaM" target="_blank" class="btn"
+            ><i class="fab fa-github"></i> GitHub Codebase</a
+          >
+        </div>
+      </section>
+
+      <section id="about">
+        <h2 class="section-title">The Singularity: About Me</h2>
+        <div class="card serif-content">
+          <h3><i class="fas fa-chart-line"></i> Research Thesis & Interests</h3>
+
+          <p>
+            I am a 5th-year BS-MS student in Physics at IISER Pune. My Master's thesis investigates the
+            Bondi-Metzner-Sachs (BMS) group of asymptotic symmetries and their direct physical consequence: the
+            Gravitational Memory Effect. This work involves:
+          </p>
+          <ul>
+            <li>
+              Understanding the conformal structure of the spacetime, especially the asymptotically flat spacetime and
+              its implications (The Carollian case).
+            </li>
+            <li>
+              Exploring the relation between soft gravitons, asymptotic symmetries, and IR physics. (Briefly acquaint
+              myself with research avenues in conjuction with high energy methods in GR applications understanding the
+              nature of gravity)
+            </li>
+            <li>
+              Utilizing the powerful xAct computer algebra framework for tensor calculus in curved spacetime. Developed
+              a framework capable of doing computations in higher dimensional spacetimes with certain symmetries
+            </li>
+          </ul>
+          <p>
+            My broader research interests encompass Mathematical General Relativity, Black Hole Physics, Gravitational
+            Wave Theory, and Quantum Field Theory in Curved Spacetime. I am passionate about leveraging both analytical
+            and computational techniques to unravel the complexities of our universe. I am very much passionate about
+            the mathematical structure of General Relativity, and I aspire to contribute to the field through rigorous
+            research and collaboration.
+          </p>
+          <h3 style="margin-top: 30px;"><i class="fas fa-user-astronaut"></i> Personal Voyage</h3>
+          <p>
+            Beyond academia, I am an avid reader of both scientific literature and science fiction, finding inspiration
+            in the imaginative possibilities. I also enjoy poetry and music. I recently started exploring the philosophy
+            of science that connect me with the natural world and the universe I study. I am also a Wolfram Student
+            Ambassador, promoting the use of computational tools in scientific research. I also love to teach and share
+            knowledge with peers, believing that collaboration is key to scientific advancement. Organizing knowledge
+            and presenting it in an accessible manner is a skill I continually strive to improve. I am a junior member
+            of <strong>Deutsche Physikalische Gesellschaft</strong> and I try to contribute actively with the best of my
+            effort as a foreign member.
+          </p>
+          <p>
+            For me, mathematical elegance and physical insight go hand in hand in the pursuit of understanding the
+            natural world.
+          </p>
+          <blockquote style="font-style: italic; color: var(--accent-color); margin-top: 20px;">
+            "In the middle of difficulty lies opportunity." - Albert Einstein
+          </blockquote>
+
+          <br>
+        </div>
+      </section>
+
+      <section id="research">
+        <h2 class="section-title">Research Horizon & Foci</h2>
+        <div class="grid">
+          <div class="card">
+            <h3><i class="fas fa-chart-area"></i> Theoretical Domains</h3>
+            <p>
+              Mathematical General Relativity, Mathematical Physics, Black Hole Physics, Gravitational Wave Theory,
+              Asymptotic Symmetries (BMS), Mathematical Physics, Quantum Field Theory in Curved Spacetime, Conformal
+              Field theories.
+            </p>
+          </div>
+          <div class="card">
+            <h3><i class="fas fa-satellite-dish"></i> Specialised Methods</h3>
+            <p>
+              Mathematical GR (Differential Geometry, Spinorial techniques, PDE theory), Numerical Relativity (NRPy+,
+              Einstein Toolkit), Perturbation Theory (BHPT), Gravitational Lensing, Computer Algebra Systems(xAct,
+              SageManifolds).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="experience">
+        <h2 class="section-title">My Worldline : Experience</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="date">June 2025 - Present (Anticipated May 2026)</span>
+            <h3>Master's Thesis: Asymptotic Symmetries, Conformal Structure of Spacetime and Gravitational Memory</h3>
+            <h4>AEI Potsdam & IUCAA Pune | Dr Sajad Aghapour & Prof. Emeritus Naresh Dadhich</h4>
+            <p>
+              Supervised by Dr. Sajad Aghapour (AEI, Potsdam) and Prof. Naresh Dadhich (IUCAA Pune, Until recent
+              passing).
+            </p>
+            <p>
+              Investigating the Bondi-Metzner-Sachs (BMS) group of asymptotic symmetries in General Relativity and its
+              physical manifestation: the Gravitational Memory Effect. Employing geometric algebra and symbolic
+              computation (xAct) to analyze gravitational wave spacetimes and their asymptotic structure. We analyze the
+              higher dimension cases in the a Conformal Gaussian Null coordinate and Bondi like coordinates. We
+              developed an xAct based framework to compute and analyse higher dimensional spacetimes obeying Einstein's
+              equatiions and it matches with that of the existing literature. Later in the thesis, we tried to
+              understand these asymptotic symmetries and memory effect in framework of Covaraint Phase Space formalism.
+              We would like to provide a covariant phase space description of charges associated and its relation to
+              memory effect. Currently we are trying also trying to understand these in conjunction with the multipole
+              moments of the source, and we focus on Kerr family of Black Holes as our test case.
+            </p>
+          </div>
+
+          <div class="timeline-item">
+            <span class="date">Summer 2024 (3 Months)</span>
+            <h3>DAAD WISE Research Fellow</h3>
+            <h4>Max Planck Institute for Gravitational Physics (AEI), Potsdam, Germany</h4>
+            <p>
+              Investigated gravitational analogues of optical effects, specifically the Gravitational Faraday and Spin
+              Hall Effects, in the weak field regime, like that of a gravitational wave metric. I tried to calculate
+              these for an interesting solution of Gravitational Bessel waves. This involved studying the propagation of
+              polarized light rays in curved spacetime using the Mathisson-Papapetrou-Dixon equations and the geometric
+              optics approximation in General Relativity. We developed a symbolic computation for the Fermi-Normal
+              coordinate system using the xAct framework to facilitate these calculations. I further tried to explore
+              the relation to topological phases in quantum mechanics, such as the Berry phase, in the context of curved
+              spacetime and its still in my list of curious things, unchecked.
+            </p>
+          </div>
+          <div class="timeline-item">
+            <span class="date">Fall 2025 - Present</span>
+            <h3>Covariant Analysis of Gravitoelectromagnetism</h3>
+            <h4>IUCAA Pune | Prof. Emeritus Naresh Dadhich</h4>
+            <p>
+              Performed a covariant analytical study of gravitoelectromagnetism in perfect fluid spacetimes using the
+              1+3 (threading) decomposition relative to a timeline congruence. I developed a rigorous geometric
+              understanding using tensorial methods and differential forms to analyze the decomposition of Weyl
+              curvature into gravitoelectric and gravitomagnetic components.
+            </p>
+            <p>
+              The project investigated duality-like structures between these sectors, clarifying mathematical analogies
+              to electromagnetic duality in curved spacetime. I further studied how the gravitoelectromagnetism system
+              depends on fluid flow kinematics (expansion, shear, vorticity, acceleration) and examined the equation
+              structure across cosmological and stationary spacetimes to identify conditions for simplifications or
+              degeneracies.
+            </p>
+          </div>
+          <div class="timeline-item">
+            <span class="date">Fall 2024</span>
+            <h3>Semester Project: AdS/CFT Correspondence</h3>
+            <h4>IISER Pune | Prof. Emeritus Sunil Mukhi</h4>
+            <p>
+              Developed a pedagogical review of the holographic duality, focusing on the derivation of the boundary
+              conformal field theory from the bulk Anti-de Sitter spacetime metric, a perspective from General
+              relativity and field theory on curved backgrounds.
+            </p>
+          </div>
+          <div class="timeline-item">
+            <span class="date">July 2023 – December 2024</span>
+            <h3>Non-linear Dynamics and Synchronization of Networks</h3>
+            <h4>IISER Thiruvananthapuram | Prof. Emeritus G. Ambika</h4>
+            <p>
+              Collaborated on the study of synchronization in different network topologies and early warning measures.
+              This project provided rigorous training in fundamental techniques for analyzing nonlinear systems,
+              focusing primarily on chaotic systems in three dimensions (continuous systems).
+            </p>
+            <p>
+              I observed and studied synchronization behavior in simple coupled chaotic systems and conducted an
+              extensive literature review on early warning systems, explosive synchronization, and synchronization
+              characterization.
+            </p>
+          </div>
+          <div class="timeline-item">
+            <span class="date">July 2023 - Present</span>
+            <h3>Wolfram Student Ambassador</h3>
+            <h4>Wolfram Technologies (Remote)</h4>
+            <p>
+              Promote and apply the Wolfram Language and specialized packages (like xAct) to solve complex tensor
+              calculus problems in advanced theoretical physics courses and research projects. Conduct tutorials to help
+              students and researchers leverage computational tools for their studies in General Relativity and related
+              fields, atleast to get acquainted with these powerful resources.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills">
+        <h2 class="section-title">Computational Toolkit</h2>
+        <div class="grid">
+          <div class="card">
+            <h3><i class="fas fa-laptop-code"></i> Programming Languages</h3>
+            <div style="margin-top: 10px;">
+              <span class="tag">Python (Numpy, SciPy, Matplotlib)</span>
+              <span class="tag">Julia (Professional for Scientific Computing)</span>
+              <span class="tag">C/C++ (Basic proficiency)</span>
+              <span class="tag">LaTeX</span>
+              <span class="tag">Bash</span>
+            </div>
+            <p style="margin-top: 15px;">
+              Experience in data analysis, numerical solution of differential equations in analysing various nonlinear
+              systems.
+            </p>
+          </div>
+          <div class="card">
+            <h3><i class="fas fa-project-diagram"></i> Dynamical Systems Analysis</h3>
+            <div style="margin-top: 10px;">
+              <span class="tag">DifferentialEquations.jl</span>
+              <span class="tag">SciPy.integrate</span>
+              <span class="tag">Phase Space Mapping</span>
+            </div>
+            <p style="margin-top: 15px;">
+              Numerical integration of nonlinear ODEs/PDEs, Poincaré sections, and basin of attraction visualization
+              using Julia and Python.
+            </p>
+          </div>
+          <div class="card">
+            <h3><i class="fas fa-cube"></i> Symbolic & Algebra</h3>
+            <div style="margin-top: 10px;">
+              <span class="tag">Wolfram Mathematica</span>
+              <span class="tag">Wolfram Library : xAct (Tensor Algebra and much more)</span>
+              <span class="tag">Black Hole Perturbation Toolkit (BHPTK)</span>
+            </div>
+            <p style="margin-top: 15px;">
+              Highly proficient in symbolic computation for complex General Relativity calculations. I will make my
+              codebase public soon on my GitHub.
+            </p>
+          </div>
+          <div class="card card-centered">
+            <h3><i class="fas fa-language"></i> Natural Languages</h3>
+            <ul>
+              <li>Malayalam: Native Proficiency</li>
+              <li>English: Fluent (Professional Working Proficiency)</li>
+              <li>German: Intermediate (A2/B1 level)</li>
+              <li>Sanskrit & Hindi: Intermediate Reading Proficiency</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="awards">
+        <h2 class="section-title">Awards & Recognition</h2>
+        <div class="grid">
+          <div class="card">
+            <h3><i class="fas fa-certificate"></i> DAAD-WISE 2024 Scholarship</h3>
+            Provided a fully-funded 3-month research internship at the Max Planck Institute for Gravitational Physics
+            (Albert-Einstein Institute-AEI), Potsdam.
+          </div>
+          <div class="card">
+            <h3><i class="fas fa-certificate"></i> INSPIRE SHE Scholarship (2021-2026)</h3>
+            Department of Science and Technology, Government of India - INSPIRE SHE, for exceptional performance in
+            higher secondary education. Awarded to top 1% students of state boards nationwide.
+          </div>
+          <div class="card">
+            <h3><i class="fas fa-certificate"></i> Infosys Foundation Scholarship</h3>
+            Tution fee waiver for the academic year 2023,2024, & 2025 based on economic background and academic
+            performance.
+          </div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <h2 class="section-title">Contact: Initiate Communication</h2>
+        <div class="card" style="text-align: center; max-width: 600px; margin: 0 auto;">
+          <p style="font-size: 1.3rem; font-weight: 600;">
+            Let's discuss gravity, black holes, mathematics, and the future of theoretical physics.
+          </p>
+          <br>
+          <p style="font-size: 1.1rem; margin-bottom: 5px;">anandh.krishna_m@students.iiserpune.ac.in</p>
+          <p style="color: var(--secondary-text); margin-bottom: 20px;">Pune, Maharashtra - India</p>
+          <div style="margin-top: 20px;">
+            <a
+              href="mailto:anandh.krishna_m@students.iiserpune.ac.in"
+              class="btn"
+              style="background: var(--accent-color); color: var(--bg-color);"
+              ><i class="fas fa-envelope"></i> Send Signal</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Anandh Krishna Murichatta.</p>
+    </footer>
+
+    <script>
+      // --- THREE.JS SCENE SETUP ---
+      const initThreeJS = () => {
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // Particles - representing a warping spacetime grid
+        const particlesGeometry = new THREE.BufferGeometry();
+        const count = 2000;
+        const positions = new Float32Array(count * 3);
+        const colors = new Float32Array(count * 3);
+
+        for (let i = 0; i < count * 3; i++) {
+          positions[i] = (Math.random() - 0.5) * 15; // Spread
+          colors[i] = Math.random();
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const getParticleColor = () => (document.body.getAttribute('data-theme') === 'dark' ? 0x00f2ff : 0x0051ff);
+
+        const material = new THREE.PointsMaterial({
+          size: 0.03,
+          color: getParticleColor(),
+          transparent: true,
+          opacity: 0.8,
+          blending: THREE.AdditiveBlending,
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, material);
+        scene.add(particlesMesh);
+
+        camera.position.z = 5;
+
+        // Mouse Interaction
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        document.addEventListener('mousemove', (event) => {
+          mouseX = event.clientX - window.innerWidth / 2;
+          mouseY = event.clientY - window.innerHeight / 2;
+        });
+
+        // Animation Loop
+        const clock = new THREE.Clock();
+
+        const animate = () => {
+          const elapsedTime = clock.getElapsedTime();
+
+          targetX = mouseX * 0.001;
+          targetY = mouseY * 0.001;
+
+          particlesMesh.rotation.y += 0.002;
+          particlesMesh.rotation.x += 0.001;
+
+          particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
+          particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
+
+          const positions = particlesMesh.geometry.attributes.position.array;
+          for (let i = 0; i < count; i++) {
+            const i3 = i * 3;
+            const x = particlesGeometry.attributes.position.array[i3];
+            positions[i3 + 2] = Math.sin(elapsedTime + x) * 0.5 + Math.sin(elapsedTime * 2 + x) * 0.2;
+          }
+          particlesMesh.geometry.attributes.position.needsUpdate = true;
+
+          const currentColor = new THREE.Color(getParticleColor());
+          material.color.lerp(currentColor, 0.05);
+
+          renderer.render(scene, camera);
+          requestAnimationFrame(animate);
+        };
+
+        animate();
+
+        // Resize Handler
+        window.addEventListener('resize', () => {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+      };
+
+      // --- UI LOGIC ---
+
+      // Theme Toggle
+      function toggleTheme() {
+        const body = document.body;
+        const currentTheme = body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        body.setAttribute('data-theme', newTheme);
+
+        const icon = document.querySelector('.theme-toggle i');
+        if (newTheme === 'light') {
+          icon.classList.remove('fa-sun');
+          icon.classList.add('fa-moon');
+        } else {
+          icon.classList.remove('fa-moon');
+          icon.classList.add('fa-sun');
+        }
+      }
+
+      // GSAP Animations
+      document.addEventListener('DOMContentLoaded', () => {
+        initThreeJS();
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Fade in Hero
+        gsap.from('.hero h1', { duration: 1.5, y: 100, opacity: 0, ease: 'power4.out' });
+        gsap.from('.hero p', { duration: 1.5, y: 50, opacity: 0, delay: 0.5, ease: 'power4.out' });
+
+        // Animate Sections on Scroll
+        gsap.utils.toArray('section').forEach((section) => {
+          gsap.from(Array.from(section.children), {
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 80%',
+              end: 'top 20%',
+              toggleActions: 'play none none reverse',
+            },
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2,
+          });
+        });
+        // Animate the Worldline (Timeline) on Scroll
+        gsap.utils.toArray('.timeline-item').forEach((item) => {
+          ScrollTrigger.create({
+            trigger: item,
+            start: 'top 60%', // Triggers when the top of the item hits 60% down the viewport
+            end: 'bottom 60%',
+            // onEnter: When scrolling down into view
+            onEnter: () => item.classList.add('active'),
+            // onLeaveBack: When scrolling back up (turns it off, making it reversible)
+            onLeaveBack: () => item.classList.remove('active'),
+            // marker: true // Uncomment this line if you want to debug where it triggers
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

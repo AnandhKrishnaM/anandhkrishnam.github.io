@@ -13,6 +13,10 @@
 - type: rss
   icon: "fas fa-rss"
   noblank: true
+
+- type: portfolio
+  icon: "fas fa-user-astronaut"
+  url: /portfolio/index.html
 # Uncomment and complete the url below to enable more contact options
 #
 # - type: mastodon

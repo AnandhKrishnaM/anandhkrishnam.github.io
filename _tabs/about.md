@@ -8,3 +8,5 @@ I am Anandh, a theoretical physics student at IISER Pune. This is my personal we
 “The Scholar resists the reduction of knowledge to a tool. I refuse the instrumentalisation of inquiry.”
 
 Everything is fun when you are passionate about it. I hope to share my passion for learning and knowledge through this webpage. This is a result of such a pursuit and exploration.
+
+Learn more about me—my skills, projects, and interests—by visiting [<i class="fas fa-user-astronaut" aria-label="View portfolio"></i>](/portfolio/index.html) or clicking the astronaut icon below.

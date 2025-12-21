@@ -442,6 +442,109 @@
           padding: 20px;
         }
       }
+      /* --- MOBILE MENU STYLES --- */
+
+      /* Default: Hide Toggle Buttons on Desktop */
+      .menu-btn,
+      .close-btn {
+        display: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-color);
+        transition: color 0.3s;
+      }
+      .menu-btn:hover,
+      .close-btn:hover {
+        color: var(--accent-color);
+      }
+
+      /* MEDIA QUERY: When screen is smaller than 900px */
+      @media (max-width: 900px) {
+        nav {
+          padding: 15px 20px;
+        }
+
+        /* Show the Hamburger Icon */
+        .menu-btn {
+          display: block;
+          order: 2; /* Place it nicely */
+        }
+
+        .theme-toggle {
+          order: 3; /* Keep theme toggle visible */
+        }
+
+        /* Hide the Malayalam text to save space */
+        .malayalam-text {
+          display: none;
+        }
+
+        /* Transform nav-links into a Sidebar */
+        .nav-links {
+          position: fixed;
+          top: 0;
+          right: -100%; /* Start off-screen */
+          width: 70%; /* Cover 70% of screen */
+          max-width: 300px;
+          height: 100vh;
+          background: var(--card-bg); /* Glass effect background */
+          backdrop-filter: blur(20px); /* Stronger blur for readability */
+          box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+          transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+          border-left: 1px solid var(--card-border);
+        }
+
+        /* The class added by JS to slide it in */
+        .nav-links.active {
+          right: 0;
+        }
+
+        .nav-links a {
+          font-size: 1.2rem;
+          margin: 20px 0;
+        }
+
+        /* Show the Close (X) button inside the menu */
+        .close-btn {
+          display: block;
+          position: absolute;
+          top: 20px;
+          right: 20px;
+        }
+
+        /* Active Link Marker for vertical menu */
+        .nav-links a.active::after {
+          display: none; /* Remove bottom underline */
+        }
+        .nav-links a.active {
+          color: var(--accent-color);
+          border-bottom: 2px solid var(--accent-color);
+        }
+      }
+      /* --- DESKTOP ZOOM ADJUSTMENT --- */
+      @media (min-width: 1100px) {
+        :root {
+          /* Standard is 16px.
+       12.8px is exactly 80% of 16px.
+       This scales down all 'rem' based sizes. */
+          font-size: 13px;
+        }
+
+        /* Since elements are smaller, we can let the container
+     get wider to fill the screen (zoomed-out feel) */
+        .container {
+          max-width: 1500px;
+        }
+
+        /* Adjust section padding to feel proportional */
+        section {
+          padding: 100px 0 50px 0;
+        }
+      }
     </style>
   </head>
   <body data-theme="dark">
@@ -450,15 +553,24 @@
     <nav>
       <div class="malayalam-text">അനന്തം ഈ സാഗരം.... ദിക്കുകൾക്കുമപ്പുറം, കാലങ്ങൾക്കുമപ്പുറം...</div>
 
-      <div class="nav-links">
-        <a href="#home" class="nav-link active">Home</a>
-        <a href="#about" class="nav-link">About</a>
-        <a href="#research" class="nav-link">Research Foci</a>
-        <a href="#experience" class="nav-link">Worldline</a>
-        <a href="#skills" class="nav-link">Skills</a>
-        <a href="#awards" class="nav-link">Awards</a>
-        <a href="#contact" class="nav-link">Contact</a>
+      <div class="menu-btn" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
       </div>
+
+      <div class="nav-links">
+        <div class="close-btn" onclick="toggleMenu()">
+          <i class="fas fa-times"></i>
+        </div>
+
+        <a href="#home" class="nav-link active" onclick="closeMenu()">Home</a>
+        <a href="#about" class="nav-link" onclick="closeMenu()">About</a>
+        <a href="#research" class="nav-link" onclick="closeMenu()">Research Foci</a>
+        <a href="#experience" class="nav-link" onclick="closeMenu()">Worldline</a>
+        <a href="#skills" class="nav-link" onclick="closeMenu()">Skills</a>
+        <a href="#awards" class="nav-link" onclick="closeMenu()">Awards</a>
+        <a href="#contact" class="nav-link" onclick="closeMenu()">Contact</a>
+      </div>
+
       <div class="theme-toggle" onclick="toggleTheme()">
         <i class="fas fa-sun" title="Toggle Light/Dark Theme"></i>
       </div>
@@ -702,7 +814,7 @@
               codebase public soon on my GitHub.
             </p>
           </div>
-          <div class="card card-centered">
+          <div class="card">
             <h3><i class="fas fa-language"></i> Natural Languages</h3>
             <ul>
               <li>Malayalam: Native Proficiency</li>
@@ -869,7 +981,30 @@
           icon.classList.add('fa-sun');
         }
       }
+      // --- MOBILE MENU LOGIC ---
 
+      function toggleMenu() {
+        const nav = document.querySelector('.nav-links');
+        nav.classList.toggle('active');
+      }
+
+      // Close menu when a link is clicked (so the user can see the section)
+      function closeMenu() {
+        const nav = document.querySelector('.nav-links');
+        if (nav.classList.contains('active')) {
+          nav.classList.remove('active');
+        }
+      }
+
+      // Close menu if clicking outside (Optional but good UX)
+      document.addEventListener('click', (e) => {
+        const nav = document.querySelector('.nav-links');
+        const menuBtn = document.querySelector('.menu-btn');
+
+        if (nav.classList.contains('active') && !nav.contains(e.target) && !menuBtn.contains(e.target)) {
+          nav.classList.remove('active');
+        }
+      });
       // GSAP Animations
       document.addEventListener('DOMContentLoaded', () => {
         initThreeJS();

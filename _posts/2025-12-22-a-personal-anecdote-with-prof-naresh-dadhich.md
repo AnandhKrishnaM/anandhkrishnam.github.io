@@ -14,20 +14,3 @@ I write this post to preserve a personal memory and intellectual influence of Pr
 
 This note is not a technical article. Instead, it is a **personal reflection** on interactions, conversations, and lessons that left a lasting impression on my academic journey.
 
-I have written a short document describing this anecdote in detail.
-
-For readers who would like a longer, self-contained version of this recollection, I’ve compiled the full write-up as a PDF:
-
-<div style="width: 100%; height: 800px; border: 1px solid #444;">
-  <iframe 
-    src="{{ '/assets/pdf/Anecdote.pdf' | relative_url }}" 
-    width="100%" 
-    height="100%" 
-    style="border: none;">
-  </iframe>
-</div>
-
-
-- **[Download the full anecdote (PDF)]({{ '/assets/pdf/Anecdote.pdf' | relative_url }})**
-
-*This post is intended as a personal record and tribute.*

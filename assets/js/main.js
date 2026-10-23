@@ -13,6 +13,12 @@
   var wide = function (px) { return window.matchMedia("(min-width: " + px + "px)").matches; };
   root.classList.add("js");
 
+  // The previous version of this site installed an offline service worker;
+  // this site uses none, so remove any that is still registered.
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) { r.unregister(); }); }).catch(function () {});
+  }
+
   /* ── theme ─────────────────────────────────────────────────────────── */
   function syncThemeColor() {
     var meta = $('meta[name="theme-color"]');

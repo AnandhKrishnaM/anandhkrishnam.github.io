@@ -1,0 +1,63 @@
+# Bibliography used by the cite shortcode:   {{< cite "dhr2019" >}}
+# Pages list the works they cite in a "References" section at the end.
+# Fields: authors, title, year, venue, arxiv, doi, url, short (label shown in text)
+
+dhr2019:
+  short: "DHR19"
+  authors: "M. Dafermos, G. Holzegel, I. Rodnianski"
+  title: "The linear stability of the Schwarzschild solution to gravitational perturbations"
+  venue: "Acta Mathematica 222, 1–214"
+  year: 2019
+  arxiv: "1601.06467"
+
+ghp1973:
+  short: "GHP73"
+  authors: "R. Geroch, A. Held, R. Penrose"
+  title: "A space-time calculus based on pairs of null directions"
+  venue: "J. Math. Phys. 14, 874"
+  year: 1973
+  doi: "10.1063/1.1666410"
+
+ks2020:
+  short: "KS20"
+  authors: "S. Klainerman, J. Szeftel"
+  title: "Global nonlinear stability of Schwarzschild spacetime under polarized perturbations"
+  venue: "Annals of Mathematics Studies 210"
+  year: 2020
+  arxiv: "1711.07597"
+
+teukolsky1973:
+  short: "Teu73"
+  authors: "S. A. Teukolsky"
+  title: "Perturbations of a rotating black hole. I."
+  venue: "Astrophys. J. 185, 635"
+  year: 1973
+  doi: "10.1086/152444"
+
+wald1984:
+  short: "Wal84"
+  authors: "R. M. Wald"
+  title: "General Relativity"
+  venue: "University of Chicago Press"
+  year: 1984
+
+hawkingellis1973:
+  short: "HE73"
+  authors: "S. W. Hawking, G. F. R. Ellis"
+  title: "The Large Scale Structure of Space-Time"
+  venue: "Cambridge University Press"
+  year: 1973
+
+penroserindler1984:
+  short: "PR84"
+  authors: "R. Penrose, W. Rindler"
+  title: "Spinors and Space-Time, Vol. 1"
+  venue: "Cambridge University Press"
+  year: 1984
+
+birkhoff1923:
+  short: "Bir23"
+  authors: "G. D. Birkhoff"
+  title: "Relativity and Modern Physics"
+  venue: "Harvard University Press"
+  year: 1923

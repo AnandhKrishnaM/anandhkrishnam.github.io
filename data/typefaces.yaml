@@ -1,0 +1,48 @@
+# Typeface presets. Choose one in hugo.toml:  [params.fonts] typeface = "arno"
+#
+#   name     shown on the comparison page (/fonts/, local only)
+#   source   adobe (needs the family in your Adobe Fonts web project) | google
+#   text     body text            display  page titles      subhead  section headings
+#   size     body text size in px (typefaces differ in how large they look)
+#
+# EB Garamond is appended to every stack as the fallback.
+
+arno:
+  name: "Arno Pro"
+  source: adobe
+  text: "'arno-pro'"
+  display: "'arno-pro-display', 'arno-pro'"
+  subhead: "'arno-pro-subhead', 'arno-pro'"
+  size: 19
+
+garamond-premier:
+  name: "Garamond Premier Pro"
+  source: adobe
+  text: "'garamond-premier-pro'"
+  display: "'garamond-premier-pro-display', 'garamond-premier-pro'"
+  subhead: "'garamond-premier-pro-subhead', 'garamond-premier-pro'"
+  size: 20
+
+minion:
+  name: "Minion 3"
+  source: adobe
+  text: "'minion-3'"
+  display: "'minion-3'"
+  subhead: "'minion-3'"
+  size: 19
+
+kepler:
+  name: "Kepler Std"
+  source: adobe
+  text: "'kepler-std'"
+  display: "'kepler-std-display', 'kepler-std'"
+  subhead: "'kepler-std-subhead', 'kepler-std'"
+  size: 18.5
+
+eb-garamond:
+  name: "EB Garamond (free)"
+  source: google
+  text: "'EB Garamond'"
+  display: "'EB Garamond'"
+  subhead: "'EB Garamond'"
+  size: 20

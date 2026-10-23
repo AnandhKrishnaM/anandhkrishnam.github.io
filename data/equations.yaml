@@ -1,0 +1,23 @@
+# The home page shows one of these each day ("equation of the day").
+# tex is written without delimiters.
+- label: "Einstein field equations"
+  tex: 'G_{\mu\nu} + \Lambda g_{\mu\nu} = 8\pi T_{\mu\nu}'
+  caption: "Matter tells spacetime how to curve; curved spacetime tells matter how to move."
+- label: "Raychaudhuri equation"
+  tex: '\frac{\mathrm{d}\theta}{\mathrm{d}\lambda} = -\tfrac{1}{2}\theta^2 - \sigma_{ab}\sigma^{ab} + \omega_{ab}\omega^{ab} - R_{ab}k^a k^b'
+  caption: "Gravity focuses null congruences — the engine of the singularity theorems."
+- label: "Teukolsky master equation"
+  tex: '\big[(\text{þ} - 4\rho - \bar\rho)(\text{þ}^\prime - \rho^\prime) - (\eth - 4\tau - \bar\tau^\prime)(\eth^\prime - \tau^\prime) - 3\Psi_2\big]\Psi_0 = 0'
+  caption: "Linear perturbations of Kerr decouple into a single wave equation for $\\Psi_0$ (GHP form, vacuum)."
+- label: "Gauss–Bonnet"
+  tex: '\int_M K\,\mathrm{d}A + \int_{\partial M} k_g\,\mathrm{d}s = 2\pi\,\chi(M)'
+  caption: "Local curvature adds up to a global, topological number."
+- label: "Bondi mass loss"
+  tex: '\frac{\mathrm{d}M_B}{\mathrm{d}u} = -\frac{1}{4\pi}\oint_{S^2} |\partial_u \sigma^0|^2\,\mathrm{d}\Omega \le 0'
+  caption: "Gravitational waves carry energy away to null infinity."
+- label: "Schrödinger equation"
+  tex: 'i\hbar\,\partial_t \lvert\psi\rangle = \hat H \lvert\psi\rangle'
+  caption: "The quantum state evolves unitarily — until we ask it a question."
+- label: "Euler's identity"
+  tex: 'e^{i\pi} + 1 = 0'
+  caption: "Five constants, three operations, one line."

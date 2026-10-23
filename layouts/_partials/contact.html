@@ -1,0 +1,12 @@
+{{- /* One line of contact links: email, CV, and whichever profiles are set. */ -}}
+{{- $a := site.Params.author }}
+{{- $links := slice }}
+{{- with $a.email }}{{ $links = $links | append (printf `<a href="mailto:%s">%s</a>` . .) }}{{ end }}
+{{- with $a.cv }}{{ $links = $links | append (printf `<a href="%s">CV (PDF)</a>` (. | relURL)) }}{{ else }}{{ if ne $.RelPermalink ("cv/" | relURL) }}{{ $links = $links | append (printf `<a href="%s">CV</a>` ("cv/" | relURL)) }}{{ end }}{{ end }}
+{{- with $a.arxiv }}{{ $links = $links | append (printf `<a href="https://arxiv.org/a/%s">arXiv</a>` .) }}{{ end }}
+{{- with $a.inspire }}{{ $links = $links | append (printf `<a href="https://inspirehep.net/authors/%s">INSPIRE</a>` .) }}{{ end }}
+{{- with $a.scholar }}{{ $links = $links | append (printf `<a href="https://scholar.google.com/citations?user=%s">Google Scholar</a>` .) }}{{ end }}
+{{- with $a.orcid }}{{ $links = $links | append (printf `<a href="https://orcid.org/%s">ORCID</a>` .) }}{{ end }}
+{{- with $a.github }}{{ $links = $links | append (printf `<a href="https://github.com/%s">GitHub</a>` .) }}{{ end }}
+{{- with $a.linkedin }}{{ $links = $links | append (printf `<a href="https://www.linkedin.com/in/%s">LinkedIn</a>` .) }}{{ end }}
+<p class="contact">{{ delimit $links `<span class="sep" aria-hidden="true">·</span>` | safeHTML }}</p>

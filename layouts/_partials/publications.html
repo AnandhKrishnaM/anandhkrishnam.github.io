@@ -1,0 +1,10 @@
+{{- /* A list of publications from data/research.yaml (context: the list). */ -}}
+<ol class="pubs">
+  {{- range . }}
+  <li>
+    <span class="pub-authors">{{ .authors }}</span>,
+    <span class="pub-title">{{ .title }}</span>{{ with .venue }}, <span class="pub-venue">{{ . }}</span>{{ end }}{{ with .year }} ({{ . }}){{ end }}.
+    {{- range $k, $v := .links }}{{ if $v }} <a href="{{ $v }}">[{{ $k }}]</a>{{ end }}{{ end }}
+  </li>
+  {{- end }}
+</ol>

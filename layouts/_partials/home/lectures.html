@@ -1,0 +1,10 @@
+{{- with site.GetPage "/lectures" }}
+{{- with .Sections }}
+<section class="block wrap" aria-labelledby="h-lectures">
+  <h2 class="block-title" id="h-lectures">Lecture notes</h2>
+  <ul class="plain-entries">
+    {{- range .ByWeight }}{{ partial "series-row.html" . }}{{ end }}
+  </ul>
+</section>
+{{- end }}
+{{- end }}

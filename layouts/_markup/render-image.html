@@ -1,0 +1,24 @@
+{{- /*
+  Images are looked up, in order, as: page bundle resource → assets/ →
+  static/attachments/ (where `./site import` puts Obsidian attachments).
+  Add #invert to the URL to invert a black-on-white diagram in dark mode:
+      ![Penrose diagram](penrose.png#invert "Optional caption")
+*/ -}}
+{{- $u := urls.Parse .Destination }}
+{{- $src := $u.Path }}
+{{- if $u.IsAbs }}{{ $src = .Destination }}
+{{- else }}
+  {{- with or (.PageInner.Resources.Get $u.Path) (resources.Get $u.Path) }}{{ $src = .RelPermalink }}
+  {{- else }}
+    {{- if fileExists (printf "static/attachments/%s" $u.Path) }}{{ $src = printf "attachments/%s" $u.Path | relURL }}{{ end }}
+  {{- end }}
+{{- end }}
+{{- $cls := cond (eq $u.Fragment "invert") "invert-dark" "" }}
+{{- if and .IsBlock .Title -}}
+<figure{{ with $cls }} class="{{ . }}"{{ end }}>
+  <img src="{{ $src | safeURL }}" alt="{{ .PlainText }}" loading="lazy">
+  <figcaption>{{ .Title | markdownify }}</figcaption>
+</figure>
+{{- else -}}
+<img src="{{ $src | safeURL }}" alt="{{ .PlainText }}" loading="lazy"{{ with $cls }} class="{{ . }}"{{ end }}{{ with .Title }} title="{{ . }}"{{ end }}>
+{{- end -}}

@@ -1,0 +1,19 @@
+{{- /* Search index for the ⌘K palette (served at /search.json). */ -}}
+{{- $out := slice }}
+{{- $pages := where (where site.Pages "Kind" "in" (slice "page" "section")) "Params.hidden" "!=" true }}
+{{- range $pages }}
+  {{- if or .IsPage (ne .Section "") }}
+  {{- $kind := cond .IsPage (partial "kind-label.html" .) (cond (eq .Section "lectures") "Series" "Section") }}
+  {{- $out = $out | append (dict
+      "t" .Title
+      "u" .RelPermalink
+      "k" $kind
+      "d" (cond .IsPage (.Date.Format "2006-01-02") "")
+      "g" (delimit (.Params.tags | default slice) " ")
+      "j" (delimit (.Params.subjects | default slice) " ")
+      "s" (.Description | default .Params.summary | default "")
+      "x" (.Plain | truncate 6000 ""))
+  }}
+  {{- end }}
+{{- end }}
+{{- $out | jsonify -}}

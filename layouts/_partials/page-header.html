@@ -1,0 +1,21 @@
+{{- /* Breadcrumb, title, subtitle and one line of metadata for a single page. */ -}}
+{{- $fmt := site.Params.dateFormat | default "2 January 2006" }}
+<header class="page-header">
+  {{- if and .Section (ne .Params.breadcrumb false) }}
+  <nav class="crumbs" aria-label="Breadcrumb">
+    {{- $crumbs := slice }}
+    {{- range .Ancestors.Reverse }}{{ if not .IsHome }}{{ $crumbs = $crumbs | append (printf `<a href="%s">%s</a>` .RelPermalink .LinkTitle) }}{{ end }}{{ end }}
+    {{- if and (eq .Section "lectures") (ne .CurrentSection.Parent.Kind "home") }}{{ $crumbs = $crumbs | append (partial "chapter-number.html" .) }}{{ end }}
+    {{- delimit $crumbs `<span class="sep" aria-hidden="true">›</span>` | safeHTML }}
+  </nav>
+  {{- end }}
+  <h1 class="page-title">{{ .Title }}{{ if .Draft }} <span class="draft-mark">draft</span>{{ end }}</h1>
+  {{ with .Params.subtitle | default .Description }}<p class="page-subtitle">{{ . | markdownify }}</p>{{ end }}
+  {{- if and .Section (ne .Params.meta false) }}
+  {{- $meta := slice (printf `<time datetime="%s">%s</time>` (.Date.Format "2006-01-02") (.Date.Format $fmt)) }}
+  {{- if gt (.Lastmod.Sub .Date).Hours 48 }}{{ $meta = $meta | append (printf "revised %s" (.Lastmod.Format $fmt)) }}{{ end }}
+  {{- with .GetTerms "subjects" }}{{ $s := slice }}{{ range . }}{{ $s = $s | append (printf `<a href="%s">%s</a>` .RelPermalink .LinkTitle) }}{{ end }}{{ $meta = $meta | append (delimit $s ", ") }}{{ end }}
+  {{- if and site.Params.readingTime (ne .Params.readingTime false) }}{{ $meta = $meta | append (printf "%d min read" .ReadingTime) }}{{ end }}
+  <p class="page-meta">{{ delimit $meta `<span class="sep" aria-hidden="true">·</span>` | safeHTML }}</p>
+  {{- end }}
+</header>

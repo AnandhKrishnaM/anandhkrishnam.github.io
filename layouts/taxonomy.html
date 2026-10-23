@@ -1,0 +1,17 @@
+{{- /* /subjects/ → subject cards; /tags/ → tag cloud */ -}}
+{{ define "main" }}
+<div class="list-shell wrap">
+  {{ partial "list-header.html" . }}
+  {{- if eq .Data.Plural "subjects" }}
+  <div class="subject-grid">
+    {{- range .Pages.ByWeight }}{{ partial "subject-card.html" . }}{{ end }}
+  </div>
+  {{- else }}
+  <div class="tag-cloud">
+    {{- range .Data.Terms.Alphabetical }}
+      <a class="chip" href="{{ .Page.RelPermalink }}">#{{ .Page.LinkTitle }} <span class="count">{{ .Count }}</span></a>
+    {{- end }}
+  </div>
+  {{- end }}
+</div>
+{{ end }}

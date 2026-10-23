@@ -1,0 +1,14 @@
+{{- /* ```tikz fences are compiled in the browser by TikZJax.
+       The tikzpicture environment is added if you leave it out. */ -}}
+{{- $src := .Inner }}
+{{- if not (strings.Contains $src `\begin{tikzpicture}`) }}{{ $src = printf "\\begin{tikzpicture}\n%s\n\\end{tikzpicture}" $src }}{{ end }}
+{{- if not (strings.Contains $src `\begin{document}`) }}{{ $src = printf "\\begin{document}\n%s\n\\end{document}" $src }}{{ end }}
+{{- if site.Params.diagrams.tikz }}
+<figure class="tikz invert-dark"{{ with .Attributes.caption }} aria-label="{{ . }}"{{ end }}>
+  <script type="text/tikz">{{ $src | safeHTML }}</script>
+  {{- with .Attributes.caption }}<figcaption>{{ . | markdownify }}</figcaption>{{ end }}
+</figure>
+{{- .Page.Store.Set "hasTikz" true }}
+{{- else }}
+<pre><code>{{ .Inner }}</code></pre>
+{{- end }}

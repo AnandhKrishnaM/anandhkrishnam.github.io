@@ -1,0 +1,9 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Your own styles. This file loads last, so anything here wins.
+   Tokens you can override are listed in tokens.css. A few ideas:
+
+   :root { --fs: 19px; --text-w: 44rem; }             bigger text, wider column
+   :root[data-theme="dark"] { --accent: #ffb86c; }    a different dark accent
+   .hero-title { font-family: var(--serif); font-style: italic; }
+   .callout.cs-theorem .callout-body { font-style: italic; }   classic AMS theorems
+   ═══════════════════════════════════════════════════════════════════════════ */

@@ -1,0 +1,3 @@
+{{- /* Singular name of the section a page belongs to: "Note", "Lecture", … */ -}}
+{{- $names := dict "notes" "Note" "lectures" "Lecture" "thoughts" "Essay" -}}
+{{- with .Section }}{{ index $names . | default (humanize . | strings.TrimSuffix "s") }}{{ else }}Page{{ end -}}

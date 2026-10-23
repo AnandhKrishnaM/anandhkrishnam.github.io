@@ -1,0 +1,8 @@
+{{- /* "§3" for a lecture: explicit `chapter:` or its position in the series
+       (counting from the series' `startAt`, default 1). */ -}}
+{{- $n := .Params.chapter }}
+{{- if not (isset .Params "chapter") }}
+  {{- $start := .CurrentSection.Params.startAt | default 1 }}
+  {{- range $i, $p := .CurrentSection.RegularPages.ByWeight }}{{ if eq $p $ }}{{ $n = add $i $start }}{{ end }}{{ end }}
+{{- end }}
+{{- return (printf "§%v" $n) -}}

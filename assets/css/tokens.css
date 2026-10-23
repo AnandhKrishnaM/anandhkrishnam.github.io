@@ -1,0 +1,126 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Design tokens.
+   Pick a palette in hugo.toml (params.palette); each has light and dark modes.
+   Override single tokens in hugo.toml ([params.colors.light] / .dark) or in
+   assets/css/custom.css. Add your own palette by copying a block below.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --serif: 'Newsreader', Georgia, serif;
+  --sans: 'Space Grotesk', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  --fs: 18px;               /* body text size */
+  --lh: 1.68;               /* body line height */
+  --text-w: 41rem;          /* reading column */
+  --toc-w: 14rem;           /* left rail on article pages */
+  --margin-w: 15rem;        /* sidenote column */
+  --gap: 2.75rem;
+  --wrap: 72rem;            /* list pages and home */
+  --topbar-h: 58px;
+  --radius: 12px;
+  --radius-sm: 7px;
+}
+
+/* ── Academic: paper and ink, one oxblood accent, nothing else ─────────── */
+:root[data-palette="academic"][data-theme="light"] {
+  --bg: #FBF9F4; --bg-2: #F4F1EA; --bg-3: #ECE8DF; --bg-raised: #FFFEFB;
+  --ink: #1C1B19; --ink-2: #3B3934; --muted: #6F6A61;
+  --line: #E4DFD5; --line-2: #CFC9BC;
+  --accent: #7D2318; --accent-2: #3B3934; --accent-3: #3B3934;
+  --accent-soft: rgba(125,35,24,.055); --accent-line: rgba(125,35,24,.28);
+  --amber-soft: rgba(28,27,25,.03); --teal-soft: rgba(28,27,25,.03);
+  --sel: rgba(125,35,24,.13);
+  --shadow: 0 1px 2px rgba(28,27,25,.04), 0 6px 20px rgba(28,27,25,.05);
+  --danger: #7D2318; --success: #3B3934;
+}
+:root[data-palette="academic"][data-theme="dark"] {
+  --bg: #151413; --bg-2: #1B1A18; --bg-3: #23221F; --bg-raised: #1A1917;
+  --ink: #E8E3D9; --ink-2: #C8C2B5; --muted: #8E887C;
+  --line: #2A2825; --line-2: #3A3732;
+  --accent: #D49A86; --accent-2: #C8C2B5; --accent-3: #C8C2B5;
+  --accent-soft: rgba(212,154,134,.08); --accent-line: rgba(212,154,134,.30);
+  --amber-soft: rgba(232,227,217,.03); --teal-soft: rgba(232,227,217,.03);
+  --sel: rgba(212,154,134,.20);
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.4);
+  --danger: #D49A86; --success: #C8C2B5;
+}
+
+/* ── Atlas: "Vellum" paper by day, "Eventide" ink by night ─────────────── */
+:root[data-palette="atlas"][data-theme="light"], :root:not([data-palette])[data-theme="light"] {
+  --bg: #F4F2EC; --bg-2: #EEEBE2; --bg-3: #E6E2D6; --bg-raised: #FBFAF6;
+  --ink: #23211C; --ink-2: #46433C; --muted: #736E62;
+  --line: #DDD8CB; --line-2: #CBC5B5;
+  --accent: #2E3192; --accent-2: #A8631C; --accent-3: #1A6B61;
+  --accent-soft: rgba(46,49,146,.08); --accent-line: rgba(46,49,146,.28);
+  --amber-soft: rgba(168,99,28,.09); --teal-soft: rgba(26,107,97,.09);
+  --sel: rgba(46,49,146,.16);
+  --shadow: 0 1px 2px rgba(40,36,28,.05), 0 10px 30px rgba(40,36,28,.07);
+  --danger: #A33A2C; --success: #2F7A46;
+}
+:root[data-palette="atlas"][data-theme="dark"], :root:not([data-palette])[data-theme="dark"] {
+  --bg: #0F1117; --bg-2: #151824; --bg-3: #1C2030; --bg-raised: #171A26;
+  --ink: #E8E4D9; --ink-2: #C6C2B6; --muted: #8B92A5;
+  --line: #262B39; --line-2: #343B4D;
+  --accent: #AC9EFF; --accent-2: #E3A857; --accent-3: #7FD1C9;
+  --accent-soft: rgba(172,158,255,.11); --accent-line: rgba(172,158,255,.32);
+  --amber-soft: rgba(227,168,87,.10); --teal-soft: rgba(127,209,201,.09);
+  --sel: rgba(172,158,255,.22);
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.45);
+  --danger: #F08A7A; --success: #7CCB8F;
+}
+
+/* ── Spacetime: gold light-cones on deep ink (from the first Jekyll site) ─ */
+:root[data-palette="spacetime"][data-theme="light"] {
+  --bg: #F7F5EF; --bg-2: #EFECE3; --bg-3: #E5E1D4; --bg-raised: #FCFBF8;
+  --ink: #1B1B28; --ink-2: #3A3A4E; --muted: #6E6E82;
+  --line: #DEDAD0; --line-2: #CCC7BA;
+  --accent: #8C6A23; --accent-2: #2F6A99; --accent-3: #2E7D72;
+  --accent-soft: rgba(140,106,35,.09); --accent-line: rgba(140,106,35,.30);
+  --amber-soft: rgba(47,106,153,.08); --teal-soft: rgba(46,125,114,.09);
+  --sel: rgba(140,106,35,.18);
+  --shadow: 0 1px 2px rgba(20,20,40,.05), 0 10px 30px rgba(20,20,40,.07);
+  --danger: #A33A2C; --success: #2F7A46;
+}
+:root[data-palette="spacetime"][data-theme="dark"] {
+  --bg: #0B0B14; --bg-2: #111120; --bg-3: #181830; --bg-raised: #13132A;
+  --ink: #E6E2D6; --ink-2: #C3BFB3; --muted: #8A8A9E;
+  --line: #1F1F36; --line-2: #2C2C48;
+  --accent: #C8A45A; --accent-2: #6B9EC4; --accent-3: #5AADA0;
+  --accent-soft: rgba(200,164,90,.10); --accent-line: rgba(200,164,90,.32);
+  --amber-soft: rgba(107,158,196,.10); --teal-soft: rgba(90,173,160,.10);
+  --sel: rgba(200,164,90,.22);
+  --shadow: 0 1px 2px rgba(0,0,0,.45), 0 14px 40px rgba(0,0,0,.5);
+  --danger: #E88B7D; --success: #7CCB8F;
+}
+
+/* ── Tufte: cream paper, near-black ink, a single red ─────────────────── */
+:root[data-palette="tufte"][data-theme="light"] {
+  --bg: #FFFFF8; --bg-2: #F7F6EC; --bg-3: #EEEDE0; --bg-raised: #FFFFFC;
+  --ink: #111111; --ink-2: #333333; --muted: #6B6B6B;
+  --line: #E4E2D6; --line-2: #D2D0C2;
+  --accent: #A00000; --accent-2: #5A5A5A; --accent-3: #1F5E5B;
+  --accent-soft: rgba(160,0,0,.06); --accent-line: rgba(160,0,0,.26);
+  --amber-soft: rgba(90,90,90,.07); --teal-soft: rgba(31,94,91,.07);
+  --sel: rgba(160,0,0,.12);
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.05);
+  --danger: #A00000; --success: #2F6B3A;
+}
+:root[data-palette="tufte"][data-theme="dark"] {
+  --bg: #151515; --bg-2: #1C1C1C; --bg-3: #252525; --bg-raised: #1A1A1A;
+  --ink: #DDDDDD; --ink-2: #BDBDBD; --muted: #8E8E8E;
+  --line: #2C2C2C; --line-2: #3A3A3A;
+  --accent: #FF7B72; --accent-2: #B0B0B0; --accent-3: #6CC4BC;
+  --accent-soft: rgba(255,123,114,.09); --accent-line: rgba(255,123,114,.30);
+  --amber-soft: rgba(176,176,176,.08); --teal-soft: rgba(108,196,188,.08);
+  --sel: rgba(255,123,114,.18);
+  --shadow: 0 1px 2px rgba(0,0,0,.5), 0 12px 32px rgba(0,0,0,.5);
+  --danger: #FF7B72; --success: #7CCB8F;
+}
+
+/* Syntax colours follow the palette */
+:root {
+  --c-key: var(--accent); --c-str: var(--accent-2); --c-num: var(--accent-3);
+  --c-com: var(--muted);  --c-fn: var(--ink);       --c-type: var(--accent-2);
+  --c-punc: var(--ink-2); --c-op: var(--accent);
+}

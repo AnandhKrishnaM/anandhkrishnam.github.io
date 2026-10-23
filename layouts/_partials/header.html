@@ -1,0 +1,33 @@
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="{{ "/" | relURL }}">{{ site.Params.author.short | default site.Title }}</a>
+
+    <nav class="mainnav" id="mainnav" aria-label="Main">
+      {{- $here := .RelPermalink }}
+      {{- range site.Menus.main }}
+        {{- /* a section with nothing published yet stays out of the menu */}}
+        {{- $empty := false }}
+        {{- with .Page }}{{ if and .IsSection (eq (len .RegularPagesRecursive) 0) (eq (len .Sections) 0) }}{{ $empty = true }}{{ end }}{{ end }}
+        {{- if not $empty }}
+        {{- $active := and (ne .URL "/") (hasPrefix $here .URL) }}
+        <a href="{{ .URL }}"{{ if $active }} class="active" aria-current="page"{{ end }}>{{ .Name }}</a>
+        {{- end }}
+      {{- end }}
+    </nav>
+
+    <div class="topbar-actions">
+      {{- if site.Params.search.enable }}
+      <button class="tbtn icon-only search-trigger" type="button" data-search-open aria-label="Search (press /)" title="Search (press /)">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
+      {{- end }}
+      <button class="tbtn icon-only theme-toggle" type="button" id="theme-toggle" aria-label="Switch between light and dark mode" title="Light / dark mode">
+        <svg class="icon i-moon-btn" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/></svg>
+        <svg class="icon i-sun-btn" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M19.4 4.6l-1.8 1.8M6.4 17.6l-1.8 1.8"/></svg>
+      </button>
+      <button class="tbtn icon-only menu-toggle" type="button" id="menu-toggle" aria-label="Menu" aria-controls="mainnav" aria-expanded="false">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,77 @@
+/* ── article typography ────────────────────────────────────────────────── */
+.prose { counter-reset: sn; }
+.prose > :first-child { margin-top: 0; }
+.prose p { margin: 0 0 1.1rem; }
+.prose h2, .prose h3, .prose h4 { font-family: var(--sans); color: var(--ink); position: relative; }
+.prose h2 { font-weight: 600; letter-spacing: -.015em; font-size: 1.45rem; line-height: 1.22; margin: 2.6rem 0 .9rem; }
+.prose h3 { font-weight: 500; font-size: 1.16rem; line-height: 1.3; margin: 2rem 0 .65rem; }
+.prose h4 { font-weight: 500; font-size: 1rem; margin: 1.6rem 0 .5rem; color: var(--ink-2); }
+.prose h1 { font-family: var(--sans); font-size: 1.7rem; font-weight: 600; letter-spacing: -.02em; margin: 2.4rem 0 1rem; }
+.hanchor { font-family: var(--sans); font-weight: 400; color: var(--line-2); margin-left: .45rem; opacity: 0; transition: opacity .15s; font-size: .8em; }
+.prose :is(h1, h2, h3, h4):hover .hanchor { opacity: 1; }
+.hanchor:hover { color: var(--accent); text-decoration: none; }
+.prose strong { font-weight: 600; color: var(--ink); }
+.prose ul, .prose ol { margin: 0 0 1.1rem; padding-left: 1.45rem; }
+.prose li { margin: .3rem 0; }
+.prose li > p { margin-bottom: .5rem; }
+.prose li::marker { color: var(--muted); }
+.prose blockquote { margin: 1.4rem 0; padding: .1rem 0 .1rem 1.2rem; border-left: 3px solid var(--line-2); color: var(--ink-2); font-style: italic; }
+.prose blockquote p:last-child { margin-bottom: 0; }
+.prose table { border-collapse: collapse; width: 100%; margin: 1.4rem 0; font-size: .94rem; display: block; overflow-x: auto; }
+.prose th, .prose td { border-bottom: 1px solid var(--line); padding: .55rem .8rem; text-align: left; vertical-align: top; }
+.prose thead th { font-family: var(--sans); font-weight: 600; font-size: .82rem; color: var(--ink-2); border-bottom: 1.5px solid var(--line-2); }
+.prose img { display: block; margin: 1.5rem auto; border-radius: 6px; }
+.prose img.embed { display: inline-block; margin: .5rem 0; vertical-align: middle; }
+.prose p > img.embed:only-child { display: block; margin: 1.5rem auto; }
+.prose figure { margin: 1.8rem 0; }
+.prose figure img { margin: 0 auto; }
+.prose figcaption { font-family: var(--sans); font-size: .82rem; color: var(--muted); text-align: center; margin-top: .6rem; line-height: 1.45; }
+.prose a.ext::after { content: "↗"; font-size: .7em; margin-left: .12em; vertical-align: .25em; opacity: .7; }
+.prose dl dt { font-weight: 600; }
+.prose dl dd { margin: 0 0 .8rem 1.2rem; }
+.prose mark { background: color-mix(in srgb, var(--accent-2) 25%, transparent); color: inherit; padding: 0 .15em; border-radius: 2px; }
+:root[data-theme="dark"] .invert-dark img, :root[data-theme="dark"] img.invert-dark, :root[data-theme="dark"] .tikz svg { filter: invert(.88) hue-rotate(180deg); }
+.wikilink { border-bottom: 1px dotted var(--accent-line); }
+.wikilink:hover { text-decoration: none; border-bottom-style: solid; }
+.wikilink.missing { color: var(--muted); border-bottom: 1px dashed var(--line-2); cursor: help; }
+.pdf-embed { display: block; margin: 1.5rem 0; }
+.pdf-embed object { width: 100%; height: 640px; border: 1px solid var(--line); border-radius: 6px; }
+.pdf-link { font-family: var(--sans); font-size: .82rem; }
+.mermaid { background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1rem; text-align: center; overflow-x: auto; }
+.tikz { text-align: center; }
+.tikz svg { max-width: 100%; }
+.footnote-ref, .prose sup a { font-family: var(--sans); font-size: .75em; }
+.footnotes { margin-top: 2.5rem; font-size: .9rem; color: var(--ink-2); }
+.footnotes hr { margin: 0 0 1rem; width: 6rem; }
+.footnotes.converted { display: none; }
+
+/* ── sidenotes & margin notes (Tufte) ──────────────────────────────────── */
+.sn { counter-increment: sn; }
+.sn-ref, .mn-ref { background: none; border: 0; padding: 0; margin: 0 0 0 .08em; cursor: default; color: var(--accent); font-family: var(--sans); font-size: .7em; line-height: 0; vertical-align: .55em; font-weight: 600; }
+.sn-ref::after { content: counter(sn); }
+.sidenote, .marginnote { font-family: var(--serif); font-size: .84rem; line-height: 1.5; color: var(--ink-2); font-style: normal; }
+.sidenote::before { content: counter(sn) "\2002"; font-family: var(--sans); font-size: .78em; font-weight: 600; color: var(--accent); }
+.sidenote p, .marginnote p { display: inline; margin: 0; }
+.sidenote img, .marginnote img { margin: .4rem 0; }
+.mn-ref { display: none; }
+
+@media (min-width: 1001px) {
+  .article[data-sidenotes] .sidenote, .marginnote {
+    float: right; clear: right; position: relative;
+    width: var(--margin-w); margin: .3rem calc(-1 * (var(--margin-w) + var(--gap))) 1rem 0;
+    padding-left: .8rem; border-left: 1px solid var(--line);
+  }
+  .article[data-sidenotes] .callout .sidenote, .callout .marginnote { margin-right: calc(-1 * (var(--margin-w) + var(--gap) + 1.15rem + 3px)); }
+  .article[data-sidenotes] .sn.hl .sidenote { border-left-color: var(--accent); color: var(--ink); }
+}
+@media (max-width: 1000px) {
+  .sidenote, .marginnote { display: none; }
+  .sn-ref, .mn-ref { cursor: pointer; display: inline; padding: .1em .15em; }
+  .sn.open .sidenote, .mn.open .marginnote, html:not(.js) .sn:focus-within .sidenote {
+    display: block; margin: .55rem 0 .8rem; padding: .55rem .8rem; background: var(--bg-2);
+    border-left: 2px solid var(--accent); border-radius: 0 6px 6px 0;
+  }
+}
+/* pages that switch sidenotes off keep classic footnotes */
+.article:not([data-sidenotes]) .sidenote { display: none; }
+.marginnote .diagram { margin: .2rem 0 .3rem; }

@@ -1,0 +1,48 @@
+{{- /* /notes/ shows every subject folder with its notes and a conventions
+       sidebar; /notes/<subject>/ lists that subject's notes. */ -}}
+{{ define "main" }}
+{{- $isRoot := eq .CurrentSection.Parent.Kind "home" }}
+<div class="list-shell wrap{{ if $isRoot }} with-rail{{ end }}">
+  <div class="list-main">
+    {{ partial "list-header.html" . }}
+
+    {{- if $isRoot }}
+      {{- with .Sections }}
+      <nav class="subject-tabs" aria-label="Subjects">
+        {{- range .ByWeight }}
+          {{- $color := "var(--accent)" }}
+          {{- with site.GetPage (printf "/subjects/%s" .File.ContentBaseName) }}{{ with .Params.color }}{{ $color = . }}{{ end }}{{ end }}
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        {{- end }}
+      </nav>
+      {{- end }}
+      {{- partial "filter.html" . }}
+      {{- range .Sections.ByWeight }}
+        {{- $pages := .RegularPages.ByDate.Reverse }}
+        <section class="subject-group" id="{{ .File.ContentBaseName }}">
+          <h2 class="group-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+          <ul class="plain-entries" data-filter-list>
+            {{- range $pages }}{{ partial "entry.html" (dict "page" .) }}{{ else }}<li class="empty">No notes yet.</li>{{ end }}
+          </ul>
+        </section>
+      {{- end }}
+      {{- with .RegularPages }}
+        <section class="subject-group">
+          <h2 class="group-title">Miscellaneous</h2>
+          <ul class="plain-entries" data-filter-list>{{ range .ByDate.Reverse }}{{ partial "entry.html" (dict "page" .) }}{{ end }}</ul>
+        </section>
+      {{- end }}
+    {{- else }}
+      {{- $pages := .RegularPagesRecursive.ByDate.Reverse }}
+      {{- if gt (len $pages) 6 }}{{ partial "filter.html" . }}{{ end }}
+      <ul class="plain-entries" data-filter-list>
+        {{- range $pages }}{{ partial "entry.html" (dict "page" .) }}{{ else }}<li class="empty">No notes yet.</li>{{ end }}
+      </ul>
+    {{- end }}
+  </div>
+
+  {{- if $isRoot }}
+  <aside class="list-rail">{{ partial "conventions.html" . }}</aside>
+  {{- end }}
+</div>
+{{ end }}

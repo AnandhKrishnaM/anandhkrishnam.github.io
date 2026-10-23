@@ -1,0 +1,14 @@
+{{- /* Dated CV entries: when | what, where, who, detail. */ -}}
+<ul class="cv-rows cv-entries">
+  {{- range . }}
+  <li>
+    <span class="cv-when">{{ .when }}</span>
+    <div class="cv-body">
+      <div class="cv-what">{{ .what | markdownify }}</div>
+      {{ with .where }}<div class="cv-where">{{ . }}</div>{{ end }}
+      {{ with .who }}<div class="cv-who">{{ . | markdownify }}</div>{{ end }}
+      {{ with .detail }}<p class="cv-detail">{{ . | markdownify }}</p>{{ end }}
+    </div>
+  </li>
+  {{- end }}
+</ul>

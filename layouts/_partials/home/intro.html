@@ -1,0 +1,46 @@
+{{- /* Name, position, contact line and bio (bio = content/_index.md).
+       With params.banner set, name/position/contact sit over a looping video
+       or image; photo and PDF CV are optional (params.author.photo / .cv). */ -}}
+{{- $a := site.Params.author }}
+{{- $b := site.Params.banner }}
+{{- $hasBanner := and $b (or $b.video $b.poster) }}
+
+{{- if $hasBanner }}
+<section class="banner" aria-label="About">
+  {{- if $b.video }}
+  <video class="banner-media" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true"{{ with $b.poster }} poster="{{ . | relURL }}"{{ end }}>
+    {{- if $b.videoSmall }}
+    <source src="{{ $b.video | relURL }}" type="video/mp4" media="(min-width: 900px)">
+    <source src="{{ $b.videoSmall | relURL }}" type="video/mp4">
+    {{- else }}
+    <source src="{{ $b.video | relURL }}" type="video/mp4">
+    {{- end }}| relURL }}" type="video/mp4">
+  </video>
+  {{- else }}
+  <img class="banner-media" src="{{ $b.poster | relURL }}" alt="" aria-hidden="true">
+  {{- end }}
+  <div class="banner-shade" aria-hidden="true"></div>
+  <div class="banner-inner">
+    {{ partial "intro-head.html" $a }}
+    {{ partial "contact.html" . }}
+  </div>
+  {{- with $b.caption }}
+  <p class="banner-credit">{{ with $b.link }}<a href="{{ . }}">{{ end }}{{ . }}{{ with $b.link }}</a>{{ end }}</p>
+  {{- end }}
+</section>
+<section class="intro wrap{{ if $a.photo }} has-photo{{ end }}">
+  <div class="intro-text">
+    <div class="intro-bio">{{ .Content }}</div>
+  </div>
+  {{- with $a.photo }}<img class="intro-photo" src="{{ . | relURL }}" alt="{{ $a.name }}" width="220" height="275">{{ end }}
+</section>
+{{- else }}
+<section class="intro wrap{{ if $a.photo }} has-photo{{ end }}" aria-label="About">
+  <div class="intro-text">
+    {{ partial "intro-head.html" $a }}
+    {{ partial "contact.html" . }}
+    <div class="intro-bio">{{ .Content }}</div>
+  </div>
+  {{- with $a.photo }}<img class="intro-photo" src="{{ . | relURL }}" alt="{{ $a.name }}" width="220" height="275">{{ end }}
+</section>
+{{- end }}

@@ -1,0 +1,6 @@
+{{- with hugo.Data.research.publications }}
+<section class="block wrap" aria-labelledby="h-pubs">
+  <h2 class="block-title" id="h-pubs">Publications and preprints</h2>
+  {{ partial "publications.html" . }}
+</section>
+{{- end }}

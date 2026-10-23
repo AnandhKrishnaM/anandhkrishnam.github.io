@@ -1,0 +1,55 @@
+{{- /*
+  Obsidian / GitHub callouts become theorem environments and admonitions.
+
+    > [!theorem] Gauss–Bonnet {#thm:gb}
+    > For a closed surface $\int_M K\,dA = 2\pi\chi(M)$.
+
+  • kinds, labels, numbering and styles come from data/callouts.yaml
+  • {#id} in the title makes it referenceable: [](#thm:gb) → "Theorem 2"
+  • [!proof]- or [!proof]+ makes it foldable (collapsed / open)
+  • unknown kinds still work and are labelled with their own name
+*/ -}}
+{{- if eq .Type "alert" }}
+  {{- $kind := lower .AlertType }}
+  {{- $cfg := index hugo.Data.callouts $kind }}
+  {{- with $cfg }}{{ with .alias }}{{ $cfg = merge (index hugo.Data.callouts .) (dict "label" $cfg.label) }}{{ end }}{{ end }}
+  {{- if not $cfg }}{{ $cfg = dict "label" (humanize $kind | title) "style" "note" }}{{ end }}
+  {{- $style := $cfg.style | default "note" }}
+  {{- $label := $cfg.label | default (humanize $kind | title) }}
+
+  {{- $title := string .AlertTitle | replaceRE `\s*<br\s*/?>\s*` " " | strings.TrimSpace }}
+  {{- $id := "" }}
+  {{- with findRESubmatch `\{#([^}\s]+)\}` $title 1 }}{{ $id = index (index . 0) 1 }}{{ end }}
+  {{- $title = replaceRE `\s*\{#[^}]+\}` "" $title | strings.TrimSpace }}
+
+  {{- $math := in (slice "theorem" "definition" "example" "proof" "remark") $style }}
+  {{- $head := "" }}
+  {{- if $math }}
+    {{- $head = printf `<span class="callout-label">%s</span><span class="callout-num"></span>` $label }}
+    {{- with $title }}{{ $head = printf `%s <span class="callout-name">(%s)</span>` $head . }}{{ end }}
+    {{- $head = printf `%s<span class="callout-dot">.</span>` $head }}
+  {{- else }}
+    {{- $head = printf `<span class="callout-icon" aria-hidden="true">%s</span><span class="callout-label">%s</span>` ($cfg.icon | default "✎") ($title | default $label) }}
+  {{- end }}
+
+  {{- $attrs := printf `class="callout cs-%s ck-%s" data-kind="%s" data-label="%s"` $style $kind $kind $label }}
+  {{- if $cfg.numbered }}{{ $attrs = printf `%s data-counter="%s"` $attrs ($cfg.counter | default "main") }}{{ end }}
+  {{- if $cfg.qed }}{{ $attrs = printf `%s data-qed` $attrs }}{{ end }}
+  {{- with $id }}{{ $attrs = printf `%s id="%s"` $attrs . }}{{ end }}
+
+  {{- if in (slice "+" "-") .AlertSign }}
+<details {{ $attrs | safeHTMLAttr }}{{ if eq .AlertSign "+" }} open{{ end }}>
+  <summary class="callout-title">{{ $head | safeHTML }}</summary>
+  <div class="callout-body">{{ .Text }}</div>
+</details>
+  {{- else }}
+<div {{ $attrs | safeHTMLAttr }}>
+  <div class="callout-title">{{ $head | safeHTML }}</div>
+  <div class="callout-body">{{ .Text }}</div>
+</div>
+  {{- end }}
+{{- else }}
+<blockquote{{ with .Attributes.class }} class="{{ . }}"{{ end }}>
+  {{ .Text }}
+</blockquote>
+{{- end }}

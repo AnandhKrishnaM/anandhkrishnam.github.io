@@ -1,0 +1,13 @@
+{{- /* A lecture series as one line: title, lecturer/venue, chapter count. */ -}}
+{{- $n := len .RegularPages }}
+<li class="row">
+  <span class="row-main">
+    <a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ if .Draft }} <span class="draft-mark">draft</span>{{ end }}
+    {{- with .Description }}<span class="row-desc">{{ . | markdownify }}</span>{{ end }}
+  </span>
+  <span class="row-meta">
+    {{- with .Params.lecturer }}{{ . }}{{ with $.Params.period }}, {{ . }}{{ end }}{{ else }}{{ with .Params.period }}{{ . }}{{ end }}{{ end }}
+    {{- if and .Params.lecturer (gt $n 0) }} · {{ end }}
+    {{- if gt $n 0 }}{{ $n }} {{ cond (eq $n 1) "chapter" "chapters" }}{{ else if not .Params.lecturer }}in preparation{{ end }}
+  </span>
+</li>

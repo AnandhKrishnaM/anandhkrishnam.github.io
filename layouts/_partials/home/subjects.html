@@ -1,0 +1,16 @@
+{{- with site.GetPage "/subjects" }}
+{{- $terms := .Pages.ByWeight }}
+{{- if $terms }}
+<section class="block wrap" aria-labelledby="h-subjects">
+  <div class="block-head">
+    <h2 id="h-subjects">Subjects</h2>
+    <a href="{{ .RelPermalink }}">All subjects →</a>
+  </div>
+  <div class="subject-grid">
+    {{- range $terms }}
+      {{ partial "subject-card.html" . }}
+    {{- end }}
+  </div>
+</section>
+{{- end }}
+{{- end }}

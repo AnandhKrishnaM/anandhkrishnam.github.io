@@ -1,0 +1,14 @@
+{{- /* One line in a list of writing: title, optional description, date.
+       Args: page, showSection (bool) — prefix the date with "Note", "Lecture", … */ -}}
+{{- $p := .page }}
+{{- $desc := $p.Description | default $p.Params.summary }}
+<li class="row" data-filter-text="{{ lower (printf "%s %s %s" $p.Title (delimit ($p.Params.tags | default slice) " ") ($desc | default "")) }}">
+  <span class="row-main">
+    <a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>{{ if $p.Draft }} <span class="draft-mark">draft</span>{{ end }}
+    {{- with $desc }}<span class="row-desc">{{ . | markdownify }}</span>{{ end }}
+  </span>
+  <span class="row-meta">
+    {{- if .showSection }}{{ partial "kind-label.html" $p }} · {{ end -}}
+    <time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "Jan 2006" }}</time>
+  </span>
+</li>

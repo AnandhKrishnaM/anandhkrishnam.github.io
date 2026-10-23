@@ -1,0 +1,253 @@
+# ══════════════════════════════════════════════════════════════════════════════
+#  Site configuration
+#
+#  Almost everything visible on the site is controlled from here.
+#    • Lists of things (CV, projects, reading list, references, callout kinds)
+#      live in  data/*.yaml
+#    • Style overrides go in  assets/css/custom.css  (loaded last)
+#    • Extra <head> / <body> snippets go in  layouts/_partials/hooks/
+#  Run `./site serve` and every change here reloads in the browser.
+# ══════════════════════════════════════════════════════════════════════════════
+
+baseURL      = "https://anandhkrishnam.github.io/"
+locale       = "en-GB"
+title        = "Anandh Krishna Murichatta"
+copyright    = "© {year} Anandh Krishna Murichatta · text licensed CC BY 4.0"
+timeZone     = "Asia/Kolkata"
+enableRobotsTXT = true
+enableEmoji     = true
+summaryLength   = 35
+capitalizeListTitles = false        # keep tag names as written
+
+[pagination]
+  pagerSize = 30
+
+# ── Taxonomies ───────────────────────────────────────────────────────────────
+# "subjects" is the big-picture axis (mathematics, physics, philosophy, …).
+# Notes get their subject automatically from the folder they live in
+# (content/notes/<subject>/). Add a new subject with `./site new subject`.
+[taxonomies]
+  subject = "subjects"
+  tag     = "tags"
+
+# ── Outputs (search.json powers the ⌘K search palette) ───────────────────────
+[outputs]
+  home    = ["html", "rss", "searchindex"]
+  section = ["html", "rss"]
+
+[outputFormats.searchindex]
+  mediaType      = "application/json"
+  baseName       = "search"
+  isPlainText    = true
+  notAlternative = true
+
+[frontmatter]
+  date    = ["date", "publishDate", ":filename", ":fileModTime"]
+  lastmod = ["lastmod", "updated", "date", ":fileModTime"]
+
+[related]
+  includeNewer = true
+  threshold    = 60
+  toLower      = true
+  [[related.indices]]
+    name   = "tags"
+    weight = 100
+  [[related.indices]]
+    name   = "subjects"
+    weight = 40
+
+# ── Markdown ─────────────────────────────────────────────────────────────────
+[markup]
+  [markup.goldmark.renderer]
+    unsafe    = true                    # allow raw HTML inside markdown
+    hardWraps = true                    # a single line break is a line break, as in Obsidian
+  [markup.goldmark.parser]
+    wrapStandAloneImageWithinParagraph = false
+    [markup.goldmark.parser.attribute]
+      block = false                     # off: a line starting with { must stay literal (Obsidian has no such syntax)
+      title = true
+  # Math is passed through untouched and typeset in the browser by MathJax,
+  # so `_` and `\\` inside equations are never mangled by markdown.
+  [markup.goldmark.extensions.passthrough]
+    enable = true
+    [markup.goldmark.extensions.passthrough.delimiters]
+      # Exactly what Obsidian uses. Environments go inside $$ … $$:
+      #   $$ \begin{align} … \end{align} $$
+      inline = [['$', '$']]
+      block  = [['$$', '$$']]
+  [markup.goldmark.extensions.footnote]
+    enable = true
+  [markup.highlight]
+    noClasses   = false                 # colours come from assets/css/code.css
+    codeFences  = true
+    guessSyntax = false
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel   = 4
+
+# ── Navigation ───────────────────────────────────────────────────────────────
+[menus]
+  [[menus.main]]
+    name    = "Research"
+    pageRef = "/research"
+    weight  = 10
+  [[menus.main]]
+    name    = "Notes"
+    pageRef = "/notes"
+    weight  = 20
+  [[menus.main]]
+    name    = "Lectures"
+    pageRef = "/lectures"
+    weight  = 30
+  [[menus.main]]
+    name    = "Essays"
+    pageRef = "/thoughts"
+    weight  = 40
+  [[menus.main]]
+    name    = "Travel"
+    pageRef = "/travel"
+    weight  = 45
+  [[menus.main]]
+    name    = "CV"
+    pageRef = "/cv"
+    weight  = 50
+  [[menus.main]]
+    name    = "Now"
+    pageRef = "/now"
+    weight  = 60
+
+  [[menus.footer]]
+    name    = "Resources"
+    pageRef = "/resources"
+    weight  = 10
+  [[menus.footer]]
+    name    = "RSS"
+    url     = "/index.xml"
+    weight  = 20
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  Theme parameters
+# ══════════════════════════════════════════════════════════════════════════════
+[params]
+  description = "Anandh Krishna Murichatta — PhD student in mathematical relativity at Chalmers University of Technology and the University of Gothenburg."
+
+  # Look & feel ---------------------------------------------------------------
+  palette      = "academic"  # academic | atlas | spacetime | tufte   (see assets/css/tokens.css)
+  look         = "academic"  # academic = quiet, typographic · colourful = the earlier tinted style
+  defaultTheme = "auto"      # auto | light | dark
+  dateFormat   = "2 January 2006"
+
+  # Reading features (each can also be switched off per page in front matter)
+  readingTime    = false
+  sidenotes      = true      # footnotes [^1] and ^[inline notes] go in the margin
+  toc            = true      # table of contents for pages with 3+ headings
+  citeAs         = false     # "Cite this" BibTeX box under notes & lectures
+  backlinks      = true      # "Referenced in" list for pages linked from other pages
+  related        = false
+  articleActions = false     # "Discuss on GitHub · Reply by email · Print" under articles
+  wikilinks      = true      # [[Page title]] and ![[image.png]] like Obsidian
+
+  [params.author]
+    name        = "Anandh Krishna Murichatta"
+    native      = "ആനന്ദ് കൃഷ്ണ"            # your name in your own script, shown under the English name
+    nativeLang  = "ml"                       # language code (ml = Malayalam)
+    nativeFont  = "Noto Serif Malayalam"     # a Google Fonts family for that script
+    short       = "Anandh Krishna Murichatta"
+    role        = "PhD student"
+    department  = "Department of Mathematical Sciences"
+    institution = "Chalmers University of Technology and University of Gothenburg"
+    location    = "Gothenburg, Sweden"
+    photo       = ""             # e.g. "images/portrait.jpg" (put the file in static/images/)
+    cv          = ""             # PDF CV, e.g. "cv.pdf" (put the file in static/)
+    email       = ""             # shown on the home page when filled
+    github      = "AnandhKrishnaM"
+    orcid       = ""
+    arxiv       = ""             # arXiv author id, e.g. "murichatta_a_1"
+    inspire     = ""             # INSPIRE-HEP author id
+    scholar     = ""             # Google Scholar user id
+    linkedin    = ""
+
+  # Fonts ----------------------------------------------------------------------
+  # typeface → one of the presets in data/typefaces.yaml:
+  #   arno · garamond-premier · minion · kepler   (Adobe Fonts, project below)
+  #   eb-garamond                                 (free, Google Fonts)
+  # Compare them side by side at http://localhost:1313/fonts/ (local only).
+  #
+  # adobe → ID of your Adobe Fonts web project (fonts.adobe.com → Web Projects).
+  # If the subscription lapses the site falls back to EB Garamond by itself.
+  #
+  # To use a font that has no preset, set serif / display / subhead / sans
+  # directly — they override the preset.
+  [params.fonts]
+    typeface = "arno"
+    adobe    = "esp6xkj"
+    google   = "family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500"
+    # serif   = "'some-font', serif"
+    # display = "'some-font-display', serif"
+    # subhead = "'some-font-subhead', serif"
+    # sans    = "'some-font', serif"           # navigation, labels, metadata
+    mono     = "'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace"
+
+  # Fine-grained colour overrides on top of the palette (any token from
+  # assets/css/tokens.css, without the leading --). Uncomment to use.
+  [params.colors.light]
+    # accent = "#2E3192"
+  [params.colors.dark]
+    # accent = "#AC9EFF"
+
+  # Home page ------------------------------------------------------------------
+  # Blocks are drawn in this order; remove or reorder freely.
+  # Available: intro, publications, recent, lectures, now
+  #   (the earlier decorative blocks hero, subjects and quote also still work)
+  [params.home]
+    blocks         = ["intro", "now", "publications", "recent", "lectures"]
+    recentCount    = 5
+    recentSections = ["notes", "thoughts", "lectures"]
+
+  # Home-page banner: a looping video (or just an image) behind your name.
+  # Leave video empty for an image-only banner; leave both empty for none.
+  [params.banner]
+    video   = "media/kerr-loop-1080.mp4"   # 1920×1080, for wide screens
+    videoSmall = "media/kerr-loop-720.mp4" # 1280×720, for phones and small windows (optional)
+    poster  = "media/kerr-poster.jpg"     # still image: shown while loading and for reduced motion
+    caption = "Ray tracing on the Kerr background"
+    link    = ""                          # optional: where the caption links, e.g. the code on GitHub
+
+  # Only used by the optional "hero" block.
+  [params.hero]
+    title     = "Anandh Krishna Murichatta"
+    art       = "none"
+    equations = false
+
+  # Mathematics ----------------------------------------------------------------
+  [params.math]
+    enable    = true               # load MathJax (pages can set math: false)
+    numbering = "ams"              # ams = number equation/align envs · all · none
+    packages  = []                 # extra MathJax packages, e.g. ["physics"]
+    src       = "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml-full.js"
+    # LaTeX macros (\R, \Ric, \pd{a}, …) live in data/macros.yaml
+
+  # Diagrams: ```mermaid and ```tikz code fences are rendered automatically.
+  [params.diagrams]
+    mermaid = true
+    tikz    = true
+
+  [params.search]
+    enable = true
+
+  # Discussion -----------------------------------------------------------------
+  # "Discuss on GitHub" opens a pre-filled issue on this repo.
+  [params.discuss]
+    repo = "AnandhKrishnaM/AnandhKrishnaM.github.io"
+
+  # Comments with giscus (GitHub Discussions). Fill all four from
+  # https://giscus.app to switch them on.
+  [params.giscus]
+    repo       = ""
+    repoId     = ""
+    category   = ""
+    categoryId = ""
+
+  # Analytics (production builds only)
+  [params.analytics]
+    google = "G-VQYRTJZSM1"

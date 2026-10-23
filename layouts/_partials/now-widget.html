@@ -1,0 +1,10 @@
+{{- /* Short version of the /now page (home-page "now" block and {{< now >}}).
+       Context: hugo.Data.now */ -}}
+{{- with .working_on }}
+<ul class="now-list">
+  {{- range . }}<li>{{ with .link }}<a href="{{ . | relURL }}">{{ end }}{{ .text | markdownify }}{{ with .link }}</a>{{ end }}</li>{{ end }}
+</ul>
+{{- end }}
+{{- with .reading }}
+<p class="now-reading">Reading: {{ $r := slice }}{{ range . }}{{ $r = $r | append (printf "<cite>%s</cite>" .title) }}{{ end }}{{ delimit $r "; " | safeHTML }}.</p>
+{{- end }}

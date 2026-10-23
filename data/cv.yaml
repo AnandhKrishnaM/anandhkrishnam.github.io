@@ -1,0 +1,130 @@
+# The CV page (/cv/) is built from this file, section by section, in order.
+# Reorder, delete or add sections freely. Each section has a title, a style and
+# items:
+#
+#   style: timeline   items: {when, what, where, who, detail}
+#   style: list       items: {when, what, where, link}
+#   style: awards     items: {name, by, when}
+#   style: skills     items: {group, items: [...]}
+#   style: text       text: "…"
+#
+# Text accepts markdown and $math$.
+# Sources: AEI/Curriculum Vitae/CV.tex (May 2026), the MS thesis, and the
+# Chalmers PhD notes (Workspace/PhD - Mathematical Relativity (Chalmers)).
+
+sections:
+
+  - title: Education
+    style: timeline
+    items:
+      - when: "2026–"
+        what: "PhD in Mathematical Relativity"
+        where: "Department of Mathematical Sciences, Chalmers University of Technology and University of Gothenburg"
+        who: "Supervisor: Thomas Bäckdahl"
+      - when: "2021–2026"
+        what: "BS‑MS dual degree, Physics"
+        where: "Indian Institute of Science Education and Research (IISER) Pune"
+        detail: "CGPA 8.8/10."
+
+  - title: Master's thesis
+    style: timeline
+    items:
+      - when: "2025–2026"
+        what: "Conformal Structure of Spacetime, Gravitational Memory Effects and Angular Momentum at $\\mathscr{I}$"
+        where: "Max Planck Institute for Gravitational Physics (AEI), Potsdam, and IUCAA, Pune; submitted to IISER Pune"
+        who: "Supervisors: Sajad Aghapour (AEI) and the late Prof.Naresh Dadhich (IUCAA)"
+        detail: "Grade 9.1/10"
+
+  - title: Research experience
+    style: timeline
+    items:
+      - when: "2025"
+        what: "Gravito-electromagnetic duality in general relativity"
+        where: "IUCAA, Pune"
+        who: "Supervisor: Prof. Naresh Dadhich"
+      - when: "2024"
+        what: "DAAD-WISE research internship: gravitational Faraday and spin Hall effects"
+        where: "Max Planck Institute for Gravitational Physics (AEI), Potsdam, Geometry and Gravitation group"
+        who: "Supervisor: Sajad Aghapour"
+      - when: "2024"
+        what: "Semester project: the AdS/CFT correspondence"
+        where: "IISER Pune"
+        who: "Supervisor: Prof. Sunil Mukhi"
+      - when: "2024"
+        what: "Semester project: Geometric structure of relativity and string theory"
+        where: "IISER Pune"
+        who: "Supervisor: Prof. Sunil Mukhi"
+      - when: "2023–2024"
+        what: "Gravitational Faraday effect in Bessel-wave spacetimes"
+        where: "Max Planck Institute for Gravitational Physics (AEI), Potsdam"
+        who: "With Sajad Aghapour"
+      - when: "2023–2024"
+        what: "Early-warning indicators for first-order transitions in complex networks"
+        where: "IISER Thiruvananthapuram"
+        who: "Supervisor: Prof. G. Ambika"
+  - title: Publications
+    style: list
+    items:
+      
+  - title: Teaching and outreach
+    style: list
+    items:
+      - when: "2023–"
+        what: "Wolfram Student Ambassador: Mathematica notebooks for general relativity with xAct and FeynCalc"
+      - when: "2022–2026"
+        what: "Student lecture series at IISER Pune on the covariant phase space and Wald–Zoupas charges, and on spinor methods in general relativity"
+
+  - title: Schools and workshops
+    style: list
+    items:
+      - when: "July 2026"
+        what: "Advances in Black Hole Theory"
+        where: "IISER Pune, India"
+      - when: "March 2026"
+        what: "Loops and Geometry: Hidden Structures in Multi-loop Amplitudes"
+        where: "MITP, Mainz"
+      - when: "Jan 2026"
+        what: "Partial Differential Equations, Analysis and Geometry"
+        where: "(Online) IHES, Bures-sur-Yvette"
+      - when: "Jan 2026"
+        what: "Lost in Translation: The Languages of Gravitational Waves"
+        where: "MITP, Mainz"
+      - when: "July 2025"
+        what: "ICTS Summer School on Gravitational-Wave Astronomy"
+        where: "ICTS-TIFR, Bengaluru"
+      - when: "June 2025"
+        what: "Quantum Information in Quantum Gravity (QIQG 2025), online"
+        where: "Perimeter Institute"
+        
+  - title: Awards and fellowships
+    style: awards
+    items:
+      - when: "2024"
+        name: "DAAD-WISE Fellowship"
+        by: "German Academic Exchange Service"
+      - when: "2022–2025"
+        name: "Infosys Foundation Scholarship"
+        by: "IISER Pune"
+      - when: "2021-2026"
+        name: "INSPIRE-SHE Scholarship"
+        by: "Department of Science and Technology, Government of India"
+
+  - title: Memberships
+    style: list
+    items:
+      - when: "2024–"
+        what: "Deutsche Physikalische Gesellschaft (junior member)"
+
+  - title: Skills
+    style: skills
+    items:
+      - group: "Computer algebra"
+        items: ["Mathematica (xAct, FeynCalc)"]
+      - group: "Programming"
+        items: ["Python", "Julia"]
+      - group: "Other"
+        items: ["LaTeX", "Lean 4", "Git"]
+
+  - title: Languages
+    style: text
+    text: "Malayalam (native), English (fluent), German, Hindi and Sanskrit (intermediate)."

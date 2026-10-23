@@ -1,0 +1,15 @@
+{{- /* A lecture series (a section under content/lectures/) with its progress. */ -}}
+{{- $s := partial "series-stats.html" . }}
+<a class="series-card" href="{{ .RelPermalink }}">
+  <div class="series-top">
+    {{ with .Params.code }}<span class="series-code">{{ . }}</span>{{ end }}
+    {{ partial "status.html" . }}
+  </div>
+  <h3 class="series-title">{{ .Title }}</h3>
+  {{ with .Params.lecturer }}<div class="series-who">{{ . }}{{ with $.Params.venue }} · {{ . }}{{ end }}</div>{{ end }}
+  {{ with .Description }}<p class="series-desc">{{ . | markdownify }}</p>{{ end }}
+  <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="{{ $s.total }}" aria-valuenow="{{ $s.written }}" aria-label="Chapters written">
+    <span style="width: {{ $s.percent }}%"></span>
+  </div>
+  <div class="series-count">{{ $s.written }} of {{ $s.total }} written</div>
+</a>

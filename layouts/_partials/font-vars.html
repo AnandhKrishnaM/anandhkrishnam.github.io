@@ -1,0 +1,13 @@
+{{- /* CSS custom properties for a typeface preset (data/typefaces.yaml).
+       Context: dict "preset" <key> "overrides" <params.fonts or empty dict>.
+       Returns e.g. "--serif:…;--display:…;--subhead:…;--sans:…;--fs:19px;" */ -}}
+{{- $fallback := "'EB Garamond', 'Garamond', Georgia, serif" }}
+{{- $p := index hugo.Data.typefaces (.preset | default "eb-garamond") | default (index hugo.Data.typefaces "eb-garamond") }}
+{{- $o := .overrides | default dict }}
+{{- $serif := $o.serif | default (printf "%s, %s" $p.text $fallback) }}
+{{- $display := $o.display | default (printf "%s, %s" ($p.display | default $p.text) $fallback) }}
+{{- $subhead := $o.subhead | default (printf "%s, %s" ($p.subhead | default $p.text) $fallback) }}
+{{- $sans := $o.sans | default $serif }}
+{{- $s := printf "--serif:%s;--display:%s;--subhead:%s;--sans:%s;" $serif $display $subhead $sans }}
+{{- with $p.size }}{{ $s = printf "%s--fs:%vpx;" $s . }}{{ end }}
+{{- return $s -}}

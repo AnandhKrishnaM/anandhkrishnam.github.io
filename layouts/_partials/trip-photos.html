@@ -1,0 +1,15 @@
+{{- /* Photos of a trip (page bundle), in order: those listed under `photos:`
+       (with captions) first, then the rest by file name.
+       Returns a slice of dict {img, caption}. */ -}}
+{{- $p := . }}
+{{- $out := slice }}{{ $used := slice }}
+{{- range $p.Params.photos }}
+  {{- $cap := .caption }}
+  {{- with $p.Resources.Get .src }}
+    {{- $out = $out | append (dict "img" . "caption" $cap) }}{{ $used = $used | append .Name }}
+  {{- end }}
+{{- end }}
+{{- range sort ($p.Resources.ByType "image") "Name" }}
+  {{- if not (in $used .Name) }}{{ $out = $out | append (dict "img" . "caption" "") }}{{ end }}
+{{- end }}
+{{- return $out -}}

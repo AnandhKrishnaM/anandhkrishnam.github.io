@@ -1,0 +1,5 @@
+{{- /* Numbered margin note with full markdown inside:
+       {{< sidenote >}}A longer aside with **markdown** and $math$.{{< /sidenote >}}
+       (For short notes the inline form ^[like this] is quicker.) */ -}}
+<span class="sn"><button type="button" class="sn-ref" aria-label="Show note"></button><span class="sidenote" role="note">{{ .Inner | strings.TrimSpace | .Page.RenderString (dict "display" "inline") }}</span></span>
+{{- /* keep on one line */ -}}

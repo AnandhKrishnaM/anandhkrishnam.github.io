@@ -1,0 +1,10 @@
+{{- /* Research projects from data/research.yaml (context: the list). */ -}}
+<div class="projects">
+  {{- range . }}
+  <article class="project">
+    <h3 class="project-title">{{ with .link }}<a href="{{ . | relURL }}">{{ end }}{{ .title }}{{ with .link }}</a>{{ end }}</h3>
+    {{ with .when }}<p class="project-meta">{{ . }}</p>{{ end }}
+    <p class="project-summary">{{ .summary | markdownify }}</p>
+  </article>
+  {{- end }}
+</div>

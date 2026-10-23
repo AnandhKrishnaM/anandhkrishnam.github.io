@@ -1,0 +1,10 @@
+<header class="list-header">
+  {{- if and .Parent (not .Parent.IsHome) }}
+  <nav class="crumbs" aria-label="Breadcrumb">
+    {{- range .Ancestors.Reverse }}{{ if not .IsHome }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a><span aria-hidden="true">/</span>{{ end }}{{ end }}
+  </nav>
+  {{- end }}
+  <h1 class="page-title">{{ with .Params.symbol }}<span class="title-symbol" aria-hidden="true">{{ . }}</span>{{ end }}{{ .Title }}</h1>
+  {{ with .Description }}<p class="page-subtitle">{{ . | markdownify }}</p>{{ end }}
+  {{ with .Content }}<div class="prose list-intro">{{ . }}</div>{{ end }}
+</header>

@@ -1,0 +1,33 @@
+{{- /* Research page: markdown introduction, then data/research.yaml —
+       current projects, earlier projects and publications. */ -}}
+{{ define "main" }}
+{{- $r := hugo.Data.research }}
+{{- $current := where ($r.projects | default slice) "status" "in" (slice "active" "reading" "exploratory") }}
+{{- $earlier := where ($r.projects | default slice) "status" "not in" (slice "active" "reading" "exploratory") }}
+<div class="list-shell wrap narrow">
+  <header class="list-header">
+    <h1 class="page-title">{{ .Title }}</h1>
+  </header>
+  <div class="prose">{{ partial "content.html" . }}</div>
+
+  {{- with $current }}
+  <h2 class="group-title">Current research</h2>
+  {{ partial "projects.html" . }}
+  {{- end }}
+
+  {{- with $earlier }}
+  <h2 class="group-title">Earlier projects</h2>
+  {{ partial "projects.html" . }}
+  {{- end }}
+
+  <h2 class="group-title">Publications and preprints</h2>
+  {{- with $r.publications }}{{ partial "publications.html" . }}{{ else }}<p class="muted">None yet.</p>{{ end }}
+
+  {{- with $r.talks }}
+  <h2 class="group-title">Talks</h2>
+  <ul class="plain-entries">
+    {{- range . }}<li class="row"><span class="row-main">{{ .title }}{{ with .where }}<span class="row-desc">{{ . }}</span>{{ end }}</span><span class="row-meta">{{ .when }}</span></li>{{ end }}
+  </ul>
+  {{- end }}
+</div>
+{{ end }}

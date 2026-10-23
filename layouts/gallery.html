@@ -1,0 +1,15 @@
+{{- /* Image grid for a section whose _index.md has `layout: gallery`.
+       Each page should set `image:` in its front matter. */ -}}
+{{ define "main" }}
+<div class="list-shell wrap">
+  {{ partial "list-header.html" . }}
+  <div class="gallery">
+    {{- range .RegularPages.ByDate.Reverse }}
+    <a class="gallery-item" href="{{ .RelPermalink }}">
+      {{- with .Params.image }}<img src="{{ . | relURL }}" alt="{{ $.Title }}" loading="lazy">{{ else }}<span class="gallery-blank">✎</span>{{ end }}
+      <span class="gallery-cap"><strong>{{ .Title }}</strong> {{ .Date.Format "Jan 2006" }}</span>
+    </a>
+    {{- end }}
+  </div>
+</div>
+{{ end }}

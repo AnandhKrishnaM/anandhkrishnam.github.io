@@ -1,0 +1,12 @@
+{{- /* Compact chapter list of the current lecture's series. */ -}}
+{{- $sec := .CurrentSection }}
+<nav class="series-nav" aria-label="{{ $sec.Title }}">
+  <a class="series-nav-title" href="{{ $sec.RelPermalink }}">{{ $sec.Title }}</a>
+  <ol>
+    {{- range $sec.RegularPages.ByWeight }}
+    <li{{ if eq . $ }} class="current" aria-current="page"{{ end }}>
+      <a href="{{ .RelPermalink }}"><span class="ch-num">{{ partial "chapter-number.html" . }}</span>{{ .LinkTitle }}</a>
+    </li>
+    {{- end }}
+  </ol>
+</nav>

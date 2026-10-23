@@ -1,0 +1,31 @@
+/* ── code ──────────────────────────────────────────────────────────────── */
+.prose :not(pre) > code { font-family: var(--mono); font-size: .82em; background: var(--bg-3); border: 1px solid var(--line); border-radius: 5px; padding: .08em .35em; color: var(--ink-2); }
+.prose pre, .highlight pre {
+  font-family: var(--mono); font-size: .82rem; line-height: 1.6;
+  background: var(--bg-2) !important; color: var(--ink); border: 1px solid var(--line);
+  border-radius: 10px; padding: 1rem 1.15rem; overflow-x: auto; margin: 0;
+  tab-size: 4;
+}
+.prose pre code { font-family: inherit; background: none; border: 0; padding: 0; font-size: inherit; color: inherit; }
+.prose .highlight, .prose > pre { position: relative; margin: 1.4rem 0; }
+.code-lang { position: absolute; top: .45rem; right: 3.3rem; font-family: var(--sans); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); pointer-events: none; }
+.copy-btn { position: absolute; top: .4rem; right: .45rem; font-family: var(--sans); font-size: .7rem; color: var(--muted); background: var(--bg-raised); border: 1px solid var(--line-2); border-radius: 6px; padding: .15rem .5rem; cursor: pointer; opacity: 0; transition: opacity .15s; }
+.highlight:hover .copy-btn, .prose > pre:hover .copy-btn, .copy-btn:focus { opacity: 1; }
+.copy-btn.done { color: var(--success); border-color: var(--success); }
+
+/* Chroma token classes → palette colours */
+.chroma .k, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kc { color: var(--c-key); font-weight: 500; }
+.chroma .kt, .chroma .nc, .chroma .nn { color: var(--c-type); }
+.chroma .s, .chroma .s1, .chroma .s2, .chroma .sa, .chroma .sb, .chroma .sc, .chroma .sd, .chroma .se, .chroma .sh, .chroma .si, .chroma .sx, .chroma .sr, .chroma .ss { color: var(--c-str); }
+.chroma .m, .chroma .mi, .chroma .mf, .chroma .mh, .chroma .mo, .chroma .il, .chroma .mb { color: var(--c-num); }
+.chroma .c, .chroma .c1, .chroma .cm, .chroma .cs, .chroma .ch, .chroma .cp, .chroma .cpf { color: var(--c-com); font-style: italic; }
+.chroma .nf, .chroma .fm, .chroma .nx { color: var(--c-fn); }
+.chroma .nb, .chroma .bp, .chroma .no { color: var(--c-type); }
+.chroma .o, .chroma .ow { color: var(--c-op); }
+.chroma .p { color: var(--c-punc); }
+.chroma .na, .chroma .nt, .chroma .nd { color: var(--c-key); }
+.chroma .gd { color: var(--danger); } .chroma .gi { color: var(--success); }
+.chroma .gh, .chroma .gu { color: var(--accent); font-weight: 600; }
+.chroma .err { color: var(--danger); }
+.chroma .hl { display: block; background: var(--accent-soft); }
+.chroma .lnt, .chroma .ln { color: var(--muted); margin-right: .8rem; user-select: none; }

@@ -1,0 +1,11 @@
+{{- /* Subject and tag chips. Args: page, limit (optional, tags only) */ -}}
+{{- $p := .page }}
+{{- $subjects := $p.GetTerms "subjects" }}
+{{- $tags := $p.GetTerms "tags" }}
+{{- with .limit }}{{ $tags = first . $tags }}{{ end }}
+{{- if or $subjects $tags }}
+<div class="chips">
+  {{- range $subjects }}<a class="chip chip-subject" href="{{ .RelPermalink }}" style="--subject: {{ .Params.color | default "var(--accent)" | safeCSS }}">{{ .LinkTitle }}</a>{{ end }}
+  {{- range $tags }}<a class="chip" href="{{ .RelPermalink }}">#{{ .LinkTitle }}</a>{{ end }}
+</div>
+{{- end }}

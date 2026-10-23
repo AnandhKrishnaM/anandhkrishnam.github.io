@@ -1,0 +1,20 @@
+{{- /* Default list page for any section (thoughts, or any new folder you add
+       under content/). Entries are grouped by year, newest first.
+       Put `layout: gallery` in a section's _index.md for an image grid. */ -}}
+{{ define "main" }}
+<div class="list-shell wrap">
+  {{ partial "list-header.html" . }}
+  {{- $pages := where .RegularPages "Params.hidden" "!=" true }}
+  {{- if gt (len $pages) 6 }}{{ partial "filter.html" . }}{{ end }}
+  {{- range $pages.GroupByDate "2006" }}
+  <section class="year-group">
+    <h2 class="year">{{ .Key }}</h2>
+    <ul class="plain-entries" data-filter-list>
+      {{- range .Pages }}{{ partial "entry.html" (dict "page" .) }}{{ end }}
+    </ul>
+  </section>
+  {{- else }}
+  <p class="empty">Nothing here yet.</p>
+  {{- end }}
+</div>
+{{ end }}

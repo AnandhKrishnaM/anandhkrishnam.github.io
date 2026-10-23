@@ -1,0 +1,45 @@
+{{- /*
+  MathJax configuration. Math is left untouched by the markdown renderer
+  (see markup.goldmark.extensions.passthrough in hugo.toml) and typeset here.
+  Typesetting starts from assets/js/main.js once sidenotes and callout numbers
+  are in place, so equation references and margin notes all see the final DOM.
+*/ -}}
+{{- $m := site.Params.math }}
+{{- if and $m.enable (ne .Params.math false) }}
+{{- $packages := $m.packages | default slice }}
+{{- $chapter := .Params.chapter }}
+{{- if $chapter }}{{ $packages = $packages | append "tagformat" }}{{ end }}
+{{- $load := slice }}{{ range $packages }}{{ $load = $load | append (printf "[tex]/%s" .) }}{{ end }}
+<script>
+  window.MathJax = {
+    loader: { load: {{ $load | jsonify | safeJS }} },
+    tex: {
+      inlineMath: [["$", "$"], ["\\(", "\\)"]],
+      displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+      processEscapes: true,
+      processEnvironments: true,
+      tags: {{ $m.numbering | default "ams" }},
+      packages: { "[+]": {{ $packages | jsonify | safeJS }} },
+      macros: {{ hugo.Data.macros | default dict | jsonify | safeJS }}{{ if $chapter }},
+      // pages with `chapter: n` number equations n.1, n.2, …
+      tagformat: { number: function (k) { return {{ printf "%v" $chapter }} + "." + k; } }{{ end }}
+    },
+    options: {
+      skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"],
+      ignoreHtmlClass: "no-math"
+    },
+    chtml: { matchFontHeight: false },
+    startup: {
+      typeset: false,
+      ready: function () {
+        MathJax.startup.defaultReady();
+        MathJax.startup.promise.then(function () {
+          window.__mathjaxReady = true;
+          window.dispatchEvent(new Event("mathjax-ready"));
+        });
+      }
+    }
+  };
+</script>
+<script async id="MathJax-script" src="{{ $m.src }}"></script>
+{{- end }}

@@ -1,0 +1,5 @@
+{{- /* The cover image of a trip: `cover:` if set, else its first photo. */ -}}
+{{- $c := false }}
+{{- with .Params.cover }}{{ $c = $.Resources.Get . }}{{ end }}
+{{- if not $c }}{{ with partial "trip-photos.html" . }}{{ $c = (index . 0).img }}{{ end }}{{ end }}
+{{- return $c -}}

@@ -1,0 +1,59 @@
+# Callout kinds, written in markdown as   > [!kind] Optional title {#optional-id}
+#
+#   label     text shown in the heading
+#   style     theorem | definition | example | proof | remark   → mathematical look
+#             note | info | tip | warning | danger | question | quote | success → admonition look
+#   numbered  true → gets a number; kinds sharing a `counter` share the sequence
+#   qed       true → ends with ∎
+#   icon      symbol for admonition-style callouts
+#   alias     reuse another kind's settings (label can still be overridden)
+#
+# Any kind not listed here still renders (with its own name as the label),
+# so Obsidian notes using e.g. >[!Derivatives] keep working.
+
+# ── mathematical environments ────────────────────────────────────────────────
+theorem:     { label: Theorem,     style: theorem,    numbered: true }
+lemma:       { label: Lemma,       style: theorem,    numbered: true }
+proposition: { label: Proposition, style: theorem,    numbered: true }
+corollary:   { label: Corollary,   style: theorem,    numbered: true }
+conjecture:  { label: Conjecture,  style: theorem,    numbered: true }
+claim:       { label: Claim,       style: theorem,    numbered: true }
+definition:  { label: Definition,  style: definition, numbered: true }
+axiom:       { label: Axiom,       style: definition, numbered: true }
+postulate:   { label: Postulate,   style: definition, numbered: true }
+notation:    { label: Notation,    style: definition }
+example:     { label: Example,     style: example,    numbered: true }
+exercise:    { label: Exercise,    style: example,    numbered: true, counter: exercise }
+problem:     { label: Problem,     style: example,    numbered: true, counter: exercise }
+proof:       { label: Proof,       style: proof,      qed: true }
+solution:    { label: Solution,    style: proof }
+derivation:  { label: Derivation,  style: proof }
+remark:      { label: Remark,      style: remark }
+intuition:   { label: Intuition,   style: remark }
+
+# ── admonitions (Obsidian / GitHub names) ────────────────────────────────────
+note:      { label: Note,      style: note,     icon: "✎" }
+info:      { label: Info,      style: info,     icon: "ⓘ" }
+abstract:  { label: Abstract,  style: info,     icon: "≡" }
+summary:   { alias: abstract,  label: Summary }
+tldr:      { alias: abstract,  label: TL;DR }
+tip:       { label: Tip,       style: tip,      icon: "✦" }
+hint:      { alias: tip,       label: Hint }
+important: { label: Important, style: tip,      icon: "!" }
+idea:      { label: Idea,      style: tip,      icon: "✧" }
+success:   { label: Success,   style: success,  icon: "✓" }
+done:      { alias: success,   label: Done }
+question:  { label: Question,  style: question, icon: "?" }
+faq:       { alias: question,  label: FAQ }
+open:      { label: Open question, style: question, icon: "?" }
+warning:   { label: Warning,   style: warning,  icon: "⚠" }
+caution:   { alias: warning,   label: Caution }
+attention: { alias: warning,   label: Attention }
+todo:      { label: To do,     style: warning,  icon: "☐" }
+danger:    { label: Danger,    style: danger,   icon: "⚡" }
+error:     { alias: danger,    label: Error }
+bug:       { alias: danger,    label: Bug }
+quote:     { label: Quote,     style: quote,    icon: "❝" }
+cite:      { alias: quote,     label: Cite }
+aside:     { label: Aside,     style: quote,    icon: "↳" }
+notes:     { alias: note,      label: Notes }

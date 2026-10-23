@@ -1,0 +1,47 @@
+{{- $js := resources.Get "js/main.js" }}
+{{- if hugo.IsProduction }}{{ $js = $js | minify | fingerprint }}{{ end }}
+<script src="{{ $js.RelPermalink }}" defer></script>
+
+{{- /* Diagram renderers load only on pages that use them (set by render hooks). */}}
+{{- if and site.Params.diagrams.mermaid (.Store.Get "hasMermaid") }}
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  const dark = document.documentElement.dataset.theme === "dark";
+  mermaid.initialize({ startOnLoad: true, theme: dark ? "dark" : "neutral", fontFamily: "inherit" });
+</script>
+{{- end }}
+{{- if .Store.Get "hasTikz" }}
+<link rel="stylesheet" href="https://tikzjax.com/v1/fonts.css">
+<script src="https://tikzjax.com/v1/tikzjax.js"></script>
+{{- end }}
+
+{{- /* Travel map: Leaflet + OpenStreetMap tiles, only on pages that have a map. */}}
+{{- if .Store.Get "hasMap" }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+  (function () {
+    var el = document.getElementById("travel-map");
+    if (!el || !window.L) return;
+    var places = JSON.parse(el.getAttribute("data-places") || "[]");
+    var map = L.map(el, { scrollWheelZoom: false, zoomControl: true, attributionControl: true, worldCopyJump: true });
+    // OpenStreetMap tiles (no key needed); greyed and, in dark mode, inverted in CSS
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    var accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#7D2318";
+    var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+    var pts = places.map(function (p) {
+      L.circleMarker([p.lat, p.lon], { radius: 6, weight: 2, color: accent, fillColor: accent, fillOpacity: .85 })
+        .addTo(map)
+        .bindPopup('<a href="' + esc(p.u) + '"><strong>' + esc(p.t) + "</strong></a>" + (p.p ? "<br>" + esc(p.p) : "") + (p.d ? "<br>" + esc(p.d) : ""));
+      return [p.lat, p.lon];
+    });
+    if (pts.length === 1) map.setView(pts[0], 5);
+    else map.fitBounds(pts, { padding: [40, 40], maxZoom: 6 });
+  })();
+</script>
+{{- end }}
+
+{{- partial "hooks/body-end.html" . }}

@@ -1,0 +1,17 @@
+{{- /* References collected by the cite shortcode on this page */}}
+  {{- with .Store.Get "cites" }}
+  <section class="refs" aria-labelledby="h-refs">
+    <h2 id="h-refs">References</h2>
+    <ol class="ref-list">
+      {{- range uniq . }}{{ $key := . }}{{ with index hugo.Data.references $key }}
+      <li id="ref-{{ $key }}">
+        <span class="ref-key">[{{ .short }}]</span>
+        {{ .authors }}, <em>{{ .title }}</em>{{ with .venue }}, {{ . }}{{ end }}{{ with .year }} ({{ . }}){{ end }}.
+        {{- with .arxiv }} <a class="ext" href="https://arxiv.org/abs/{{ . }}" target="_blank" rel="noopener">arXiv:{{ . }}</a>{{ end }}
+        {{- with .doi }} <a class="ext" href="https://doi.org/{{ . }}" target="_blank" rel="noopener">doi</a>{{ end }}
+        {{- with .url }} <a class="ext" href="{{ . }}" target="_blank" rel="noopener">link</a>{{ end }}
+      </li>
+      {{- end }}{{ end }}
+    </ol>
+  </section>
+  {{- end }}

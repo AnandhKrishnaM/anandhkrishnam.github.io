@@ -1,0 +1,22 @@
+{{- /*
+  Links:
+  • external → open in a new tab, marked with a small arrow
+  • [text](../physics/birkhoff.md) or [text](/notes/foo) → resolved to the page
+  • [](#thm:gb) with empty text → filled with "Theorem 2" by main.js
+*/ -}}
+{{- $u := urls.Parse .Destination }}
+{{- $href := .Destination }}
+{{- $ext := false }}
+{{- if $u.IsAbs }}
+  {{- $ext = in (slice "http" "https") $u.Scheme }}
+{{- else if $u.Path }}
+  {{- $path := strings.TrimSuffix ".md" $u.Path }}
+  {{- with or (.PageInner.GetPage $path) (.PageInner.GetPage $u.Path) }}
+    {{- $href = .RelPermalink }}
+    {{- with $u.Fragment }}{{ $href = printf "%s#%s" $href . }}{{ end }}
+  {{- else }}
+    {{- with .PageInner.Resources.Get $u.Path }}{{ $href = .RelPermalink }}{{ end }}
+  {{- end }}
+{{- end -}}
+<a href="{{ $href | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if $ext }} class="ext" target="_blank" rel="noopener"{{ end }}>{{ .Text }}</a>
+{{- /* keep on one line */ -}}

@@ -1,0 +1,11 @@
+{{- /* {{< cite "dhr2019" >}}  or  {{< cite "dhr2019" "Thm. 1.1" >}}
+       Keys come from data/references.yaml; cited works are listed at the end of the page. */ -}}
+{{- $key := .Get 0 }}
+{{- $loc := .Get 1 }}
+{{- with index hugo.Data.references $key }}
+  {{- $.Page.Store.Add "cites" (slice $key) }}
+  <a class="cite" href="#ref-{{ $key }}" title="{{ .authors }} — {{ .title }} ({{ .year }})">[{{ .short }}{{ with $loc }}, {{ . }}{{ end }}]</a>
+{{- else }}
+  {{- warnf "cite: no reference %q in data/references.yaml (%s)" $key $.Page.File.Path }}
+  <span class="cite missing">[{{ $key }}?]</span>
+{{- end -}}

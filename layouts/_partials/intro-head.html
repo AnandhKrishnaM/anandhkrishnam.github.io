@@ -1,0 +1,9 @@
+{{- /* Name (with the name in its own script, if set) and position lines.
+       Context: site.Params.author */ -}}
+<h1 class="intro-name">{{ .name }}</h1>
+{{ with .native }}<p class="intro-native" lang="{{ $.nativeLang | default "ml" }}">{{ . }}</p>{{ end }}
+<p class="intro-position">
+  {{- with .role }}{{ . }}<br>{{ end }}
+  {{- with .department }}{{ . }}<br>{{ end }}
+  {{- with .institution }}{{ . }}{{ end }}
+</p>

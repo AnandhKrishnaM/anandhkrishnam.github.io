@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="{{ site.Language.Lang | default "en" }}" data-palette="{{ site.Params.palette | default "atlas" }}">
+<head>
+  {{- partial "head.html" . }}
+</head>
+<body class="kind-{{ .Kind }} section-{{ .Section | default "root" }}">
+  <a class="skip-link" href="#main">Skip to content</a>
+  {{ partial "header.html" . }}
+  <main id="main">
+    {{- block "main" . }}{{ end }}
+  </main>
+  {{ partial "footer.html" . }}
+  {{ partial "search.html" . }}
+  {{ partial "scripts.html" . }}
+</body>
+</html>

@@ -1,0 +1,11 @@
+{{- $secs := site.Params.home.recentSections | default (slice "notes" "thoughts" "lectures") }}
+{{- $pages := where (where site.RegularPages "Section" "in" $secs) "Params.hidden" "!=" true }}
+{{- with first (site.Params.home.recentCount | default 5) $pages.ByDate.Reverse }}
+<section class="block wrap" aria-labelledby="h-recent">
+  <h2 class="block-title" id="h-recent">Recent notes and writing</h2>
+  <ul class="plain-entries">
+    {{- range . }}{{ partial "entry.html" (dict "page" . "showSection" true) }}{{ end }}
+  </ul>
+  <p class="block-more"><a href="{{ "notes/" | relURL }}">All notes</a>{{ with site.GetPage "/thoughts" }}{{ if .RegularPages }} · <a href="{{ .RelPermalink }}">All essays</a>{{ end }}{{ end }}</p>
+</section>
+{{- end }}

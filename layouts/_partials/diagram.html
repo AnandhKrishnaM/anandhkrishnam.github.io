@@ -1,0 +1,40 @@
+{{- /* Small relativity diagrams that follow the colour theme.
+       Args: type (lightcone | penrose | manifold), caption, size (small | medium | large) */ -}}
+{{- $type := .type | default "lightcone" }}
+<span class="diagram diagram-{{ .size | default "small" }}">
+{{- if eq $type "lightcone" }}
+<svg viewBox="0 0 120 120" role="img" aria-label="Light cone">
+  <polygon points="60,60 10,110 110,110" class="d-fill-2"/>
+  <polygon points="60,60 10,10 110,10" class="d-fill-1"/>
+  <line x1="60" y1="60" x2="10" y2="10" class="d-stroke-1"/><line x1="60" y1="60" x2="110" y2="10" class="d-stroke-1"/>
+  <line x1="60" y1="60" x2="10" y2="110" class="d-stroke-2"/><line x1="60" y1="60" x2="110" y2="110" class="d-stroke-2"/>
+  <line x1="60" y1="4" x2="60" y2="116" class="d-axis"/><line x1="4" y1="60" x2="116" y2="60" class="d-axis"/>
+  <text x="60" y="8" class="d-label d-c1" text-anchor="middle">future</text>
+  <text x="60" y="118" class="d-label d-c2" text-anchor="middle">past</text>
+  <circle cx="60" cy="60" r="2.6" class="d-dot"/>
+</svg>
+{{- else if eq $type "penrose" }}
+<svg viewBox="0 0 120 120" role="img" aria-label="Penrose diagram of the Schwarzschild exterior">
+  <polygon points="60,5 115,60 60,115 5,60" class="d-frame"/>
+  <line x1="5" y1="60" x2="60" y2="5" class="d-sing"/>
+  <line x1="60" y1="115" x2="115" y2="60" class="d-stroke-1 d-dash"/>
+  <line x1="60" y1="5" x2="115" y2="60" class="d-stroke-3"/>
+  <line x1="115" y1="60" x2="60" y2="115" class="d-stroke-3"/>
+  <circle cx="60" cy="5" r="2" class="d-dot"/><circle cx="60" cy="115" r="2" class="d-dot-2"/><circle cx="115" cy="60" r="2" class="d-dot-3"/>
+  <text x="66" y="11" class="d-label d-c1">i⁺</text><text x="66" y="118" class="d-label d-c2">i⁻</text><text x="100" y="56" class="d-label d-c3">i⁰</text>
+  <text x="97" y="31" class="d-label d-c3">ℐ⁺</text><text x="97" y="96" class="d-label d-c3">ℐ⁻</text>
+  <text x="80" y="96" class="d-label d-c1">H⁺</text><text x="18" y="30" class="d-label d-sing-t">r = 0</text>
+</svg>
+{{- else if eq $type "manifold" }}
+<svg viewBox="0 0 120 100" role="img" aria-label="A geodesic on a manifold">
+  <path d="M 20,70 C 15,50 25,35 40,30 C 55,25 65,20 75,25 C 90,32 100,45 100,60 C 100,75 90,85 75,82 C 60,79 50,85 40,80 C 28,74 22,80 20,70 Z" class="d-frame d-surface"/>
+  <path d="M 38,68 C 42,55 52,42 62,36 C 72,30 80,35 85,50" class="d-stroke-1 d-thick"/>
+  <line x1="38" y1="68" x2="30" y2="55" class="d-stroke-2"/><polygon points="30,55 27,62 34,58" class="d-arrow"/>
+  <circle cx="38" cy="68" r="2.4" class="d-dot"/><circle cx="85" cy="50" r="2.4" class="d-dot"/>
+  <text x="31" y="78" class="d-label d-it d-c1">p</text><text x="88" y="56" class="d-label d-it d-c1">q</text>
+  <text x="58" y="29" class="d-label d-it d-c1">γ</text><text x="17" y="51" class="d-label d-it d-c2">TₚM</text>
+  <text x="70" y="78" class="d-label d-it d-c3">(M, g)</text>
+</svg>
+{{- end }}
+{{- with .caption }}<span class="diagram-cap">{{ . | markdownify }}</span>{{ end }}
+</span>

@@ -1,0 +1,12 @@
+{{- $updated := now }}{{ with site.Lastmod }}{{ $updated = . }}{{ end }}
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-copy">© {{ now.Format "2006" }} {{ site.Params.author.name }}<span class="sep" aria-hidden="true">·</span>Last updated {{ $updated.Format "January 2006" }}</p>
+    <nav class="footer-nav" aria-label="Footer">
+      {{- range site.Menus.footer }}<a href="{{ .URL }}">{{ .Name }}</a>{{ end }}
+      {{- /* local-only helper pages: they exist only when drafts are built (./site serve) */}}
+      {{- with site.GetPage "/guide" }}<a href="{{ .RelPermalink }}" class="dev-only" title="Only visible while editing locally">Writing guide</a>{{ end }}
+      {{- with site.GetPage "/fonts" }}<a href="{{ .RelPermalink }}" class="dev-only" title="Only visible while editing locally">Typefaces</a>{{ end }}
+    </nav>
+  </div>
+</footer>

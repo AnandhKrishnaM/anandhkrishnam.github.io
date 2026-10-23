@@ -1,0 +1,37 @@
+{{- /*
+  Attachments for any page (most useful for lectures), from front matter:
+    pdf:    notes.pdf            # file in the page bundle, static/, or a URL
+    embed_pdf: true              # also show it inline
+    slides: slides.pdf | URL
+    video:  dQw4w9WgXcQ | URL    # a bare id is treated as YouTube
+    repo:   https://github.com/…   # code for this page
+    links:  [{name: "Problem sheet", url: "sheet1.pdf"}]
+*/ -}}
+{{- $p := . }}
+{{- $resolve := dict }}
+{{- range $key := slice "pdf" "slides" "repo" }}
+  {{- with index $p.Params $key }}
+    {{- $u := . }}
+    {{- with $p.Resources.Get . }}{{ $u = .RelPermalink }}{{ else }}{{ if not (strings.Contains $u "://") }}{{ $u = relURL $u }}{{ end }}{{ end }}
+    {{- $resolve = merge $resolve (dict $key $u) }}
+  {{- end }}
+{{- end }}
+{{- $video := .Params.video }}
+{{- if or $resolve $video .Params.links }}
+<div class="resources">
+  {{- with $resolve.pdf }}<a class="res" href="{{ . }}" target="_blank" rel="noopener"><span aria-hidden="true">⎙</span> Lecture notes (PDF)</a>{{ end }}
+  {{- with $resolve.slides }}<a class="res" href="{{ . }}" target="_blank" rel="noopener"><span aria-hidden="true">▤</span> Slides</a>{{ end }}
+  {{- with $video }}<a class="res" href="{{ cond (strings.Contains . "://") . (printf "https://www.youtube.com/watch?v=%s" .) }}" target="_blank" rel="noopener"><span aria-hidden="true">▶</span> Recording</a>{{ end }}
+  {{- with $resolve.repo }}<a class="res" href="{{ . }}" target="_blank" rel="noopener"><span aria-hidden="true">⌘</span> Code</a>{{ end }}
+  {{- range .Params.links }}
+    {{- $u := .url }}{{ with $p.Resources.Get .url }}{{ $u = .RelPermalink }}{{ end }}
+    <a class="res" href="{{ $u }}" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> {{ .name }}</a>
+  {{- end }}
+</div>
+{{- if and $resolve.pdf .Params.embed_pdf }}
+<div class="pdf-frame"><object data="{{ $resolve.pdf }}" type="application/pdf"><a href="{{ $resolve.pdf }}">Open the PDF</a></object></div>
+{{- end }}
+{{- if and $video (not (strings.Contains $video "://")) .Params.embed_video }}
+<div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/{{ $video }}" title="Recording" loading="lazy" allowfullscreen></iframe></div>
+{{- end }}
+{{- end }}

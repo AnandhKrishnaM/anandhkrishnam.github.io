@@ -1,0 +1,15 @@
+/* ── print / save as PDF: clean lecture-notes look ─────────────────────── */
+@media print {
+  :root { --bg: #fff; --bg-2: #f6f6f6; --bg-3: #eee; --bg-raised: #fff; --ink: #000; --ink-2: #222; --muted: #555; --line: #ddd; --line-2: #bbb; }
+  body { font-size: 11pt; background: #fff; }
+  main { padding-top: 0; }
+  .topbar, .site-footer, .article-left, .article-right, .article-actions, .pager, .comments, .cite-as,
+  .hanchor, .copy-btn, .code-lang, #progress, .palette, .scrim, .resources, .related, .backlinks, .filter { display: none !important; }
+  .article-shell { display: block; padding: 0; }
+  .article { max-width: none; }
+  a { color: #000; }
+  .prose a.ext::after { content: " (" attr(href) ")"; font-size: .8em; }
+  .sidenote, .marginnote { display: block !important; float: none !important; width: auto !important; margin: .3rem 0 .6rem 1.5rem !important; font-size: 9pt; border-left: 1px solid #bbb; padding-left: .5rem; }
+  .callout, pre, figure, table, mjx-container[display="true"] { break-inside: avoid; }
+  h2, h3 { break-after: avoid; }
+}

@@ -1,0 +1,16 @@
+{{- /* A subject (taxonomy term) as a card with per-section counts. */ -}}
+{{- $all := where .Pages "Params.hidden" "!=" true }}
+{{- $pages := where $all "Kind" "page" }}
+{{- $counts := slice }}
+{{- range slice "notes" "lectures" "thoughts" }}
+  {{- $n := len (where $pages "Section" .) }}
+  {{- if $n }}{{ $counts = $counts | append (printf "%d %s" $n (cond (eq $n 1) (strings.TrimSuffix "s" .) .)) }}{{ end }}
+{{- end }}
+{{- $series := len (where (where $all "Kind" "section") "Section" "lectures") }}
+{{- if $series }}{{ $counts = $counts | append (printf "%d series" $series) }}{{ end }}
+<a class="subject-card" href="{{ .RelPermalink }}" style="--subject: {{ .Params.color | default "var(--accent)" | safeCSS }}">
+  <span class="subject-symbol" aria-hidden="true">{{ .Params.symbol | default "§" }}</span>
+  <span class="subject-title">{{ .Title }}</span>
+  {{ with .Description }}<span class="subject-desc">{{ . | markdownify }}</span>{{ end }}
+  <span class="subject-count">{{ with $counts }}{{ delimit . " · " }}{{ else }}coming soon{{ end }}</span>
+</a>

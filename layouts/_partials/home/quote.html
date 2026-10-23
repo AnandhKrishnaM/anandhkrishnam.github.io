@@ -1,0 +1,8 @@
+{{- with site.Params.quote }}{{ if .text }}
+<section class="block wrap">
+  <blockquote class="pull-quote">
+    <p>{{ .text | markdownify }}</p>
+    {{ with .cite }}<cite>— {{ . }}</cite>{{ end }}
+  </blockquote>
+</section>
+{{- end }}{{ end }}

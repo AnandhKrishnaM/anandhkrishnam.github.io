@@ -1,0 +1,19 @@
+{{ define "main" }}
+{{- $sidenotes := and site.Params.sidenotes (ne .Params.sidenotes false) }}
+{{- $isLecture := and (eq .Section "lectures") (ne .CurrentSection.Parent.Kind "home") }}
+<div class="article-shell">
+  <aside class="article-left">
+    {{- if $isLecture }}{{ partial "series-nav.html" . }}{{ end }}
+    {{- partial "toc.html" . }}
+  </aside>
+  <article class="article{{ if .Draft }} is-draft{{ end }}"{{ if $sidenotes }} data-sidenotes{{ end }}{{ with .Params.chapter }} data-chapter="{{ . }}"{{ end }}>
+    {{- partial "page-header.html" . }}
+    {{- partial "resources.html" . }}
+    <div class="prose" id="prose">
+      {{ partial "content.html" . }}
+    </div>
+    {{- if .Section }}{{ partial "article-footer.html" . }}{{ end }}
+  </article>
+  <div class="article-right"></div>
+</div>
+{{ end }}

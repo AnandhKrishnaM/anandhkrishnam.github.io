@@ -1,0 +1,15 @@
+{{- /* Previous / next. Lectures follow the series order (weight);
+       everything else is chronological within its section. */ -}}
+{{- $prev := false }}{{ $next := false }}
+{{- if .Section }}
+  {{- $list := cond (eq .Section "lectures") .CurrentSection.RegularPages.ByWeight .CurrentSection.RegularPages.ByDate }}
+  {{- $i := -1 }}{{ range $k, $p := $list }}{{ if eq $p $ }}{{ $i = $k }}{{ end }}{{ end }}
+  {{- if gt $i 0 }}{{ $prev = index $list (sub $i 1) }}{{ end }}
+  {{- if and (ge $i 0) (lt (add $i 1) (len $list)) }}{{ $next = index $list (add $i 1) }}{{ end }}
+{{- end }}
+{{- if or $prev $next }}
+<nav class="pager" aria-label="More in this section">
+  {{- with $prev }}<a class="pager-prev" href="{{ .RelPermalink }}"><span class="pager-dir">← Previous</span><span class="pager-title">{{ .Title }}</span></a>{{ else }}<span></span>{{ end }}
+  {{- with $next }}<a class="pager-next" href="{{ .RelPermalink }}"><span class="pager-dir">Next →</span><span class="pager-title">{{ .Title }}</span></a>{{ end }}
+</nav>
+{{- end }}

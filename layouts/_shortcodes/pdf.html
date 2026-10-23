@@ -1,0 +1,8 @@
+{{- /* {{< pdf src="notes.pdf" height="720" >}} — embeds a PDF with a download link.
+       src may be a page-bundle file, a path under static/, or a URL. */ -}}
+{{- $src := .Get "src" | default (.Get 0) }}
+{{- with .Page.Resources.Get $src }}{{ $src = .RelPermalink }}{{ else }}{{ if not (strings.Contains $src "://") }}{{ $src = relURL $src }}{{ end }}{{ end }}
+<figure class="pdf-frame" style="--h: {{ .Get "height" | default "720" }}px">
+  <object data="{{ $src }}" type="application/pdf"><a href="{{ $src }}">Open the PDF</a></object>
+  <figcaption><a href="{{ $src }}" target="_blank" rel="noopener">Open / download PDF ↗</a>{{ with .Get "caption" }} — {{ . | markdownify }}{{ end }}</figcaption>
+</figure>

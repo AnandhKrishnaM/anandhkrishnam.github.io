@@ -1,0 +1,89 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{- $title := cond .IsHome site.Title (printf "%s · %s" .Title site.Title) }}
+{{- $desc := .Description | default .Params.summary | default (cond .IsHome site.Params.description (.Summary | plainify | truncate 160)) | default site.Params.description }}
+<title>{{ $title }}</title>
+<meta name="description" content="{{ $desc | plainify }}">
+<meta name="author" content="{{ site.Params.author.name }}">
+<link rel="canonical" href="{{ .Permalink }}">
+<meta name="theme-color" content="#F4F2EC">
+
+{{- /* Open Graph / social cards */}}
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $desc | plainify }}">
+<meta property="og:type" content="{{ cond .IsPage "article" "website" }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+{{- with .Params.image }}<meta property="og:image" content="{{ . | absURL }}">{{ end }}
+{{- if .IsPage }}
+<meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+<meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+{{- end }}
+<meta name="twitter:card" content="summary">
+
+{{- with .OutputFormats.Get "rss" }}
+<link rel="alternate" type="application/rss+xml" href="{{ .RelPermalink }}" title="{{ site.Title }}">
+{{- end }}
+<link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
+
+{{- /* Apply the saved / preferred colour scheme before first paint. */}}
+<script>
+  (function () {
+    var d = document.documentElement, pref = "{{ site.Params.defaultTheme | default "auto" }}", t = null;
+    try { t = localStorage.getItem("theme"); } catch (e) {}
+    if (!t) t = pref === "auto" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : pref;
+    d.setAttribute("data-theme", t);
+  })();
+</script>
+
+{{- /* Fonts: an Adobe Fonts web project (params.fonts.adobe) and/or Google Fonts */}}
+{{- with site.Params.fonts.adobe }}
+<link rel="preconnect" href="https://use.typekit.net" crossorigin>
+<link rel="stylesheet" href="{{ printf "https://use.typekit.net/%s.css" . | safeURL }}">
+{{- end }}
+{{- with site.Params.author.native }}
+{{- /* only the glyphs of the name in its own script are downloaded */}}
+<link rel="stylesheet" href="{{ printf "https://fonts.googleapis.com/css2?family=%s:wght@400;500&text=%s&display=swap" (replace (site.Params.author.nativeFont | default "Noto Serif Malayalam") " " "+") (urlquery .) | safeURL }}">
+{{- end }}
+{{- with site.Params.fonts.google }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="{{ printf "https://fonts.googleapis.com/css2?%s&display=swap" . | safeURL }}">
+{{- end }}
+
+{{- /* Stylesheet: every file in assets/css, concatenated; custom.css comes last. */}}
+{{- $parts := slice }}
+{{- $sheets := slice "tokens" "base" "layout" "components" "prose" "callouts" "code" }}
+{{- if eq (site.Params.look | default "academic") "academic" }}{{ $sheets = $sheets | append "academic" }}{{ end }}
+{{- range $sheets | append (slice "print" "custom") }}
+  {{- with resources.Get (printf "css/%s.css" .) }}{{ $parts = $parts | append . }}{{ end }}
+{{- end }}
+{{- $css := $parts | resources.Concat "css/site.css" }}
+{{- if hugo.IsProduction }}{{ $css = $css | minify | fingerprint }}{{ end }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}">
+
+{{- /* Font stacks and colour overrides from hugo.toml */}}
+{{- $s := "" }}
+{{- with site.Params.fonts }}
+  {{- $s = printf ":root{%s--mono:%s}" (partial "font-vars.html" (dict "preset" .typeface "overrides" .)) .mono }}
+{{- end }}
+{{- with site.Params.colors.light }}
+  {{- $s = printf "%s:root[data-theme=light]{" $s }}{{ range $k, $v := . }}{{ $s = printf "%s--%s:%s;" $s $k $v }}{{ end }}{{ $s = printf "%s}" $s }}
+{{- end }}
+{{- with site.Params.colors.dark }}
+  {{- $s = printf "%s:root[data-theme=dark]{" $s }}{{ range $k, $v := . }}{{ $s = printf "%s--%s:%s;" $s $k $v }}{{ end }}{{ $s = printf "%s}" $s }}
+{{- end }}
+<style>{{ $s | safeCSS }}</style>
+
+{{- partial "math.html" . }}
+
+{{- if and hugo.IsProduction (not hugo.IsServer) site.Params.analytics.google }}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ site.Params.analytics.google }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag("js", new Date()); gtag("config", "{{ site.Params.analytics.google }}");
+</script>
+{{- end }}
+
+{{- partial "hooks/head-end.html" . }}

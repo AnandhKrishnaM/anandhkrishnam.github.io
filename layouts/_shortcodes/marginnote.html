@@ -1,0 +1,4 @@
+{{- /* Unnumbered note or small figure in the margin:
+       {{< marginnote >}}![](figure.png){{< /marginnote >}} */ -}}
+<span class="mn"><button type="button" class="mn-ref" aria-label="Show margin note">⊕</button><span class="marginnote" role="note">{{ .Inner | strings.TrimSpace | .Page.RenderString (dict "display" "inline") }}</span></span>
+{{- /* keep on one line */ -}}

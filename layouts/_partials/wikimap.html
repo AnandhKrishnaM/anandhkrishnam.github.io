@@ -1,0 +1,12 @@
+{{- /* Lookup table for [[wikilinks]]: urlized title, link title, file name
+       and any `wikialiases` of every page and section → page.
+       Built once per build (see partialCached in content.html). */ -}}
+{{- $m := dict }}
+{{- range where site.Pages "Kind" "in" (slice "page" "section") }}
+  {{- $p := . }}
+  {{- $keys := slice (urlize .Title) (urlize .LinkTitle) }}
+  {{- with .File }}{{ $keys = $keys | append (urlize .ContentBaseName) }}{{ end }}
+  {{- range .Params.wikialiases }}{{ $keys = $keys | append (urlize .) }}{{ end }}
+  {{- range $keys }}{{ if . }}{{ $m = merge $m (dict . $p) }}{{ end }}{{ end }}
+{{- end }}
+{{- return $m -}}

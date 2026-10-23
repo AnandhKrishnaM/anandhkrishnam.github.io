@@ -1,0 +1,64 @@
+# The Research page is built from this file.
+#
+# projects: title, when, status, summary, link (optional URL or site path)
+#   status active | reading | exploratory  → listed under "Current research"
+#   status complete | paused               → listed under "Earlier projects"
+# publications: authors, title, venue, year, links: {arxiv: …, pdf: …, journal: …}
+# talks: when, title, where
+
+projects:
+  - title: "Stability of black-hole spacetimes"
+    when: "PhD project, Chalmers University of Technology, 2026–. Supervisor: Thomas Bäckdahl."
+    status: active
+    summary: >-
+      Linear stability of the Kerr family, the field equations for linearised gravity on
+      Kerr, and spinor methods for studying them.
+
+  - title: "The compacted GHP formalism"
+    status: active
+    link: /lectures/np-ghp/
+    summary: >-
+      The compacted Geroch–Held–Penrose calculus as a tool for linear perturbations of
+      type D vacuum spacetimes.
+
+  - title: "Gravito-electromagnetic duality in general relativity"
+    when: "IUCAA, Pune, 2025. With Naresh Dadhich."
+    status: exploratory
+    summary: >-
+      Duality symmetry of the Einstein equations beyond vacuum, its action on the
+      covariant phase space, and the associated dual charges.
+
+  - title: "Conformal structure, gravitational memory and angular momentum at null infinity"
+    when: "Master's thesis, AEI Potsdam and IUCAA, 2025–26. Supervisors: Sajad Aghapour and the late Naresh Dadhich."
+    status: complete
+    summary: >-
+      Asymptotically flat spacetimes in Bondi–Sachs and conformal Gaussian null coordinates,
+      the BMS group, flux–balance laws, the gravitational memory effect and the
+      supertranslation ambiguity of angular momentum, including higher-dimensional
+      Bondi–Sachs computations in xAct.
+
+  - title: "Gravitational Faraday and spin Hall effects"
+    when: "AEI Potsdam, 2023–24 (DAAD-WISE fellowship, summer 2024). With Sajad Aghapour."
+    status: complete
+    summary: >-
+      Propagation of polarised light in weak gravitational fields and in gravitational
+      Bessel-wave spacetimes; the relation between the gravitational spin Hall effect and
+      geometric phases.
+
+publications:
+  - authors: "A. K. Murichatta"          # add co-authors if any
+    title: "Gravito-electromagnetic dualities in general relativity"
+    venue: "in preparation"
+  - authors: "A. K. Murichatta"          # add co-authors if any
+    title: "Gravitational spin Hall effects and their relation to topological and geometric phases in general relativity — a review"
+    venue: "in preparation"
+  # - authors: "A. K. Murichatta, …"
+  #   title: "…"
+  #   venue: "arXiv:2601.01234"
+  #   year: 2026
+  #   links: { arxiv: "https://arxiv.org/abs/2601.01234", pdf: "" }
+
+talks: []
+  # - when: "Mar 2026"
+  #   title: "…"
+  #   where: "Seminar, Chalmers"

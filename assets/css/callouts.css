@@ -1,0 +1,45 @@
+/* ── callouts: theorem environments & admonitions ──────────────────────── */
+.callout {
+  --c: var(--accent); --c-soft: var(--accent-soft);
+  margin: 1.6rem 0; padding: .85rem 1.15rem .3rem; border-left: 3px solid var(--c);
+  background: var(--c-soft); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.callout-title { font-family: var(--sans); font-size: .92rem; margin-bottom: .45rem; color: var(--c); line-height: 1.4; }
+.callout-label { font-weight: 600; }
+.callout-name { font-weight: 400; color: var(--ink-2); }
+.callout-num:not(:empty)::before { content: " "; }
+.callout-num { font-weight: 600; }
+.callout-dot { font-weight: 600; }
+.callout-icon { display: inline-block; width: 1.2em; text-align: center; margin-right: .3rem; }
+.callout-body > :last-child { margin-bottom: .8rem; }
+.callout-body > blockquote { font-style: normal; }
+.callout:target { box-shadow: 0 0 0 2px var(--accent-line); }
+details.callout > summary { cursor: pointer; list-style: none; }
+details.callout > summary::-webkit-details-marker { display: none; }
+details.callout > summary::after { content: "▸"; margin-left: .5rem; color: var(--muted); display: inline-block; transition: transform .15s; }
+details.callout[open] > summary::after { transform: rotate(90deg); }
+details.callout:not([open]) { padding-bottom: .4rem; }
+details.callout:not([open]) > summary { margin-bottom: 0; }
+
+/* mathematical styles */
+.cs-theorem { --c: var(--accent); --c-soft: var(--accent-soft); }
+.cs-definition { --c: var(--accent-3); --c-soft: var(--teal-soft); }
+.cs-example { --c: var(--accent-2); --c-soft: var(--amber-soft); }
+.cs-remark { --c: var(--muted); --c-soft: transparent; border-left-width: 2px; }
+.cs-remark .callout-label, .cs-proof .callout-label { font-style: italic; font-weight: 500; }
+.cs-proof { --c: var(--ink-2); --c-soft: transparent; border-left: 0; padding-left: 0; padding-right: 0; border-radius: 0; }
+.cs-proof .callout-title, .cs-proof .callout-dot { display: inline; color: var(--ink); font-family: var(--serif); font-size: 1rem; }
+.cs-proof .callout-title { float: left; margin-right: .45rem; margin-bottom: 0; }
+.callout[data-qed] .callout-body > :last-child::after { content: "∎"; float: right; color: var(--muted); margin-left: 1rem; }
+.cs-proof .callout-body > p:first-child { display: block; }
+
+/* admonition styles */
+.cs-note { --c: var(--accent); --c-soft: var(--accent-soft); }
+.cs-info { --c: var(--accent-3); --c-soft: var(--teal-soft); }
+.cs-tip { --c: var(--accent-3); --c-soft: var(--teal-soft); }
+.cs-success { --c: var(--success); --c-soft: color-mix(in srgb, var(--success) 9%, transparent); }
+.cs-question { --c: var(--accent-2); --c-soft: var(--amber-soft); }
+.cs-warning { --c: var(--accent-2); --c-soft: var(--amber-soft); }
+.cs-danger { --c: var(--danger); --c-soft: color-mix(in srgb, var(--danger) 9%, transparent); }
+.cs-quote { --c: var(--muted); --c-soft: var(--bg-2); }
+.cs-quote .callout-body { font-style: italic; }

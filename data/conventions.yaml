@@ -1,0 +1,16 @@
+# Notation and sign conventions, shown in the sidebar of the Notes page.
+notation:
+  - [ 'g_{ab}', "metric tensor" ]
+  - [ '\nabla_a', "Levi-Civita connection" ]
+  - [ 'R_{abcd}', "Riemann tensor" ]
+  - [ 'R_{ab},\ R', "Ricci tensor, scalar" ]
+  - [ 'G_{ab}', "Einstein tensor" ]
+  - [ 'C_{abcd}', "Weyl tensor" ]
+  - [ '\mathcal{L}_X', "Lie derivative" ]
+  - [ '\Psi_0,\dots,\Psi_4', "Weyl scalars (NP)" ]
+  - [ '\eth,\ \eth^\prime', "edth operators (GHP)" ]
+signs:
+  - 'Signature $(-,+,+,+)$'
+  - 'Curvature $[\nabla_a,\nabla_b]v^c = R_{abd}{}^{c}v^d$'
+  - 'Ricci $R_{ab} = R_{acb}{}^{c}$'
+  - 'Units $G = c = 1$, so $G_{ab} = 8\pi T_{ab}$'

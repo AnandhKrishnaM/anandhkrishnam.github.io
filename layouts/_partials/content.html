@@ -1,0 +1,93 @@
+{{- /*
+  Renders a page's content with the Obsidian-flavoured extras that the
+  markdown renderer itself does not know about:
+
+    [[Page]]  [[Page|alias]]  [[Page#Heading]]     → links to other pages
+    ![[figure.png]]  ![[figure.png|400]]           → images (page bundle or static/attachments/)
+    ![[notes.pdf]]                                  → embedded PDF
+    ^[an inline note]                               → numbered margin note
+
+  Code blocks and math are set aside first so that e.g. a commutator
+  $[[X,Y],Z]$ or a regex ^[a-z] inside code is never touched.
+*/ -}}
+{{- $page := . }}
+{{- $c := string .Content }}
+
+{{- /* 0. a callout whose type has stray characters (e.g. [!Notes$]) is not
+       recognised and its $ would unbalance every equation after it */}}
+{{- with findRE `<p>\s*\[![^\]]*\]` $c 1 }}
+  {{- warnf "%s: callout %s not recognised — callout types must be letters only, e.g. > [!note]" $page.File.Path (index . 0 | strings.TrimPrefix "<p>") }}
+{{- end }}
+
+{{- /* 1. protect code and math */}}
+{{- $held := findRE `(?s)<pre.*?</pre>|<code.*?</code>|\\begin\{[a-zA-Z]+\*?\}.*?\\end\{[a-zA-Z]+\*?\}|\$\$.*?\$\$|\\\[.*?\\\]|\$[^$\n]+?\$|\\\(.*?\\\)` $c }}
+{{- range $i, $s := $held }}{{ $c = replace $c $s (printf "\x00H%d\x00" $i) 1 }}{{ end }}
+{{- /* a maths span that contains paragraph or list markup was split apart by markdown */}}
+{{- $broken := false }}
+{{- range $held }}{{ if and (not (hasPrefix . "<")) (findRE `</?(p|li|ul|ol)>` . 1) }}{{ $broken = true }}{{ end }}{{ end }}
+{{- if $broken }}
+  {{- warnf "%s: a display-maths block is broken (a blank line, or a line starting with - + * # inside $$…$$). Run: ./site fixmath %s" $page.File.Path (printf "content/%s" $page.File.Path) }}
+{{- end }}
+
+{{- /* 2. inline footnotes ^[…] (one level of nested brackets allowed) */}}
+{{- if ne $page.Params.sidenotes false }}
+  {{- $c = replaceRE `\^\[((?:[^\[\]]|\[[^\[\]]*\])+)\]` `<span class="sn"><button type="button" class="sn-ref" aria-label="Show note"></button><span class="sidenote" role="note">$1</span></span>` $c }}
+{{- end }}
+
+{{- /* 3. wikilinks and embeds */}}
+{{- if site.Params.wikilinks }}
+  {{- $map := partialCached "wikimap.html" "wikimap" }}
+  {{- range findRESubmatch `(!?)\[\[([^\[\]|#\x00]*)(#[^\[\]|\x00]*)?(?:\|([^\[\]\x00]*))?\]\]` $c }}
+    {{- $full := index . 0 }}{{ $bang := index . 1 }}
+    {{- $target := index . 2 | strings.TrimSpace }}{{ $frag := index . 3 }}{{ $alias := index . 4 | strings.TrimSpace }}
+    {{- $html := "" }}
+    {{- if $bang }}
+      {{- $ext := path.Ext $target | lower }}
+      {{- $src := "" }}
+      {{- with $page.Resources.Get $target }}{{ $src = .RelPermalink }}
+      {{- else }}
+        {{- if fileExists (printf "static/attachments/%s" $target) }}{{ $src = printf "attachments/%s" $target | relURL }}{{ else }}{{ $src = $target }}{{ end }}
+      {{- end }}
+      {{- $src = replace $src " " "%20" }}
+      {{- if in (slice ".png" ".jpg" ".jpeg" ".gif" ".svg" ".webp" ".avif") $ext }}
+        {{- $w := "" }}{{ if findRE `^\d+(x\d+)?$` $alias }}{{ $w = index (split $alias "x") 0 }}{{ end }}
+        {{- $alt := cond (and $alias (not $w)) $alias (path.BaseName $target) }}
+        {{- $html = printf `<img class="embed" src="%s" alt="%s" loading="lazy"%s>` $src $alt (cond (ne $w "") (printf ` width="%s"` $w) "") }}
+      {{- else if eq $ext ".pdf" }}
+        {{- $html = printf `<span class="pdf-embed"><object data="%s" type="application/pdf"></object><a href="%s" class="pdf-link">Open %s</a></span>` $src $src (path.Base $target) }}
+      {{- else }}
+        {{- $p := index $map (urlize $target) }}
+        {{- with $p }}{{ $html = printf `<a class="wikilink transclude" href="%s">↪ %s</a>` .RelPermalink .LinkTitle }}{{ else }}{{ $html = printf `<span class="wikilink missing">%s</span>` $target }}{{ end }}
+      {{- end }}
+    {{- else }}
+      {{- $p := index $map (urlize $target) }}
+      {{- if and (not $p) (eq $target "") }}{{ $p = $page }}{{ end }}
+      {{- $heading := strings.TrimPrefix "#" $frag }}
+      {{- $text := $alias | default (cond (ne $target "") (cond (ne $heading "") (printf "%s › %s" $target $heading) $target) $heading) }}
+      {{- with $p }}
+        {{- $href := .RelPermalink }}{{ if eq $target "" }}{{ $href = "" }}{{ end }}
+        {{- with $frag }}{{ $href = printf "%s#%s" $href (anchorize (strings.TrimPrefix "#" .)) }}{{ end }}
+        {{- $html = printf `<a class="wikilink" href="%s">%s</a>` $href $text }}
+      {{- else }}
+        {{- $html = printf `<span class="wikilink missing" title="Not published yet">%s</span>` $text }}
+      {{- end }}
+    {{- end }}
+    {{- $c = replace $c $full $html }}
+  {{- end }}
+{{- end }}
+
+{{- /* 4. restore code and math. Multi-line math inside a callout or quote
+       arrives with the "> " line prefixes still attached; drop them. */}}
+{{- range $i, $s := $held }}
+  {{- if and (not (hasPrefix $s "<")) (strings.Contains $s "\n") }}{{ $s = replaceRE `(?m)^[ \t]*(?:>[ \t]?)+` "" $s }}{{ end }}
+  {{- $c = replace $c (printf "\x00H%d\x00" $i) $s 1 }}
+{{- end }}
+
+{{- /* 5. Obsidian-style line breaks (hardWraps) leave a <br> next to display maths
+       and at the edges of paragraphs; a display equation already breaks the line. */}}
+{{- $c = replaceRE `<br>\s*(\$\$)` "\n$1" $c }}
+{{- $c = replaceRE `(\$\$)\s*<br>` "$1\n" $c }}
+{{- $c = replaceRE `<p>(?:\s*<br>)+\s*` "<p>" $c }}
+{{- $c = replaceRE `(?:\s*<br>)+\s*</p>` "</p>" $c }}
+{{- $c = replaceRE `<p>\s*</p>` "" $c }}
+{{- $c | safeHTML -}}

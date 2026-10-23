@@ -1,0 +1,25 @@
+{{- /* Pages that link here, via [[wikilink]] or an ordinary markdown link. */ -}}
+{{- $me := . }}
+{{- $keys := slice (urlize .Title) (urlize .LinkTitle) }}
+{{- with .File }}{{ $keys = $keys | append (urlize .ContentBaseName) }}{{ end }}
+{{- range .Params.wikialiases }}{{ $keys = $keys | append (urlize .) }}{{ end }}
+{{- $base := "" }}{{ with .File }}{{ $base = printf "%s.md" .ContentBaseName }}{{ end }}
+{{- $from := slice }}
+{{- range site.RegularPages }}
+  {{- if ne . $me }}
+    {{- $raw := .RawContent }}
+    {{- $hit := or (strings.Contains $raw $me.RelPermalink) (and $base (strings.Contains $raw $base)) }}
+    {{- if not $hit }}
+      {{- range findRESubmatch `\[\[([^\[\]|#]+)` $raw }}{{ if in $keys (urlize (index . 1)) }}{{ $hit = true }}{{ end }}{{ end }}
+    {{- end }}
+    {{- if $hit }}{{ $from = $from | append . }}{{ end }}
+  {{- end }}
+{{- end }}
+{{- with $from }}
+<section class="backlinks" aria-labelledby="h-backlinks">
+  <h2 id="h-backlinks">Referenced in</h2>
+  <ul class="link-list">
+    {{- range . }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}
+  </ul>
+</section>
+{{- end }}

@@ -1,0 +1,44 @@
+{{- /* Under an article: tags, references, backlinks, and (if switched on in
+       hugo.toml) related pages, a BibTeX box and discussion links. */ -}}
+<footer class="article-footer">
+
+  {{- with .GetTerms "tags" }}
+  <p class="article-tags">Keywords: {{ $t := slice }}{{ range . }}{{ $t = $t | append (printf `<a href="%s">%s</a>` .RelPermalink .LinkTitle) }}{{ end }}{{ delimit $t ", " | safeHTML }}</p>
+  {{- end }}
+
+  {{- partial "references.html" . }}
+
+  {{- if and site.Params.backlinks (ne .Params.backlinks false) }}{{ partial "backlinks.html" . }}{{ end }}
+
+  {{- if and site.Params.related (ne .Params.related false) }}
+  {{- with first 4 (where (site.RegularPages.Related .) "Params.hidden" "!=" true) }}
+  <section class="related" aria-labelledby="h-related">
+    <h2 id="h-related">Related</h2>
+    <ul class="link-list">{{ range . }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}</ul>
+  </section>
+  {{- end }}
+  {{- end }}
+
+  {{- if and site.Params.citeAs (ne .Params.citeAs false) (in (slice "notes" "lectures" "thoughts") .Section) }}
+  {{- $last := index (split site.Params.author.name " ") (sub (len (split site.Params.author.name " ")) 1) | lower }}
+  <details class="cite-as">
+    <summary>Cite</summary>
+<pre><code>@misc{ {{- $last }}{{ .Date.Format "2006" }}{{ .File.ContentBaseName | replaceRE "[^a-zA-Z0-9]" "" -}},
+  author       = { {{- site.Params.author.name -}} },
+  title        = { {{- .Title -}} },
+  year         = { {{- .Date.Format "2006" -}} },
+  howpublished = {\url{ {{- .Permalink -}} }}
+}</code></pre>
+  </details>
+  {{- end }}
+
+  {{- if site.Params.articleActions }}
+  <div class="article-actions">
+    {{- with site.Params.discuss.repo }}<a href="https://github.com/{{ . }}/issues/new?title={{ printf "Re: %s" $.Title | urlquery }}">Discuss on GitHub</a>{{ end }}
+    {{- with site.Params.author.email }}<a href="mailto:{{ . }}?subject={{ printf "Re: %s" $.Title | urlquery }}">Reply by email</a>{{ end }}
+  </div>
+  {{- end }}
+
+  {{- partial "prev-next.html" . }}
+  {{- partial "comments.html" . }}
+</footer>

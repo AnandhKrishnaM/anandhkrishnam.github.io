@@ -1,0 +1,13 @@
+{{- /* Links to profiles elsewhere; only the ones filled in hugo.toml appear. */ -}}
+{{- with site.Params.author }}
+<ul class="social">
+  {{- with .github }}<li><a href="https://github.com/{{ . }}" rel="me noopener" target="_blank">GitHub</a></li>{{ end }}
+  {{- with .arxiv }}<li><a href="https://arxiv.org/a/{{ . }}" rel="noopener" target="_blank">arXiv</a></li>{{ end }}
+  {{- with .inspire }}<li><a href="https://inspirehep.net/authors/{{ . }}" rel="noopener" target="_blank">INSPIRE</a></li>{{ end }}
+  {{- with .orcid }}<li><a href="https://orcid.org/{{ . }}" rel="noopener" target="_blank">ORCID</a></li>{{ end }}
+  {{- with .scholar }}<li><a href="https://scholar.google.com/citations?user={{ . }}" rel="noopener" target="_blank">Scholar</a></li>{{ end }}
+  {{- with .linkedin }}<li><a href="https://www.linkedin.com/in/{{ . }}" rel="noopener" target="_blank">LinkedIn</a></li>{{ end }}
+  {{- with .email }}<li><a href="mailto:{{ . }}">Email</a></li>{{ end }}
+  <li><a href="{{ "index.xml" | relURL }}">RSS</a></li>
+</ul>
+{{- end }}

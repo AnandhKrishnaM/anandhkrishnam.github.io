@@ -1,0 +1,42 @@
+# The /now page — what you are doing at the moment.
+# Edit this file whenever something changes; `./site now` sets `updated` to
+# today and opens it. Every section is optional: delete one and it disappears.
+# Text fields accept markdown and $math$.
+
+updated: 2026-10-23
+location: "Gothenburg, Sweden"
+
+# What has most of your attention. One line each; `link` is optional.
+working_on:
+  - text: "Starting my PhD with Thomas Bäckdahl: first-year courses and the Kerr-stability literature"
+  - text: "Writing up the gravito-electromagnetic duality and gravitational spin Hall projects"
+  - text: "Working through the Newman–Penrose and GHP formalisms"
+    link: /lectures/np-ghp/
+
+# Books and papers in progress. `note` and `link` are optional.
+reading:
+  - title: "Spinors and Space-Time, Vol. 1"
+    author: "R. Penrose and W. Rindler"
+  - title: "The Large Scale Structure of Space-Time"
+    author: "S. W. Hawking and G. F. R. Ellis"
+  - title: "General Relativity"
+    author: "R. M. Wald"
+
+# Move a book here when you finish it; the list keeps your reading history.
+finished: []
+  # - title: "…"
+  #   author: "…"
+  #   when: "Oct 2026"
+  #   note: "one line on what you made of it"
+
+# Courses you are taking or teaching this term.
+courses: []
+  # - title: "PDE methods"
+  #   where: "Chalmers / GU"
+  #   role: "taking"            # taking · teaching assistant · lecturing
+
+# Conferences, schools, visits and talks coming up.
+upcoming: []
+  # - when: "Jan 2027"
+  #   what: "…"
+  #   where: "…"

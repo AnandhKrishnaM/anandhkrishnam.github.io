@@ -1,0 +1,31 @@
+{{- /* /travel/: a map of all places, then the trips as cards with cover photos. */ -}}
+{{ define "main" }}
+{{- $trips := .RegularPages.ByDate.Reverse }}
+{{- $places := slice }}
+{{- range $trips }}
+  {{- if and .Params.lat .Params.lon }}
+    {{- $places = $places | append (dict "t" .Title "u" .RelPermalink "p" (.Params.place | default "") "d" (.Params.dates | default "") "lat" .Params.lat "lon" .Params.lon) }}
+  {{- end }}
+{{- end }}
+<div class="list-shell travel">
+  <div class="travel-head">{{ partial "list-header.html" . }}</div>
+  {{- with $places }}
+  <div class="travel-map" id="travel-map" role="region" aria-label="Map of places" data-places="{{ jsonify . }}"></div>
+  {{- $.Store.Set "hasMap" true }}
+  {{- end }}
+  <div class="trip-grid">
+    {{- range $trips }}
+    {{- $c := partial "trip-cover.html" . }}
+    <a class="trip-card" href="{{ .RelPermalink }}">
+      {{- with $c }}{{ $t := .Process "fill 800x560 Smart webp q78" }}<img src="{{ $t.RelPermalink }}" width="{{ $t.Width }}" height="{{ $t.Height }}" alt="" loading="lazy">{{ end }}
+      <span class="trip-card-text">
+        <span class="trip-card-title">{{ .Title }}{{ if .Draft }} <span class="draft-mark">draft</span>{{ end }}</span>
+        <span class="trip-card-meta">{{ with .Params.place }}{{ . }}{{ end }}{{ if and .Params.place .Params.dates }} · {{ end }}{{ with .Params.dates }}{{ . }}{{ end }}</span>
+      </span>
+    </a>
+    {{- else }}
+    <p class="empty">Nothing here yet.</p>
+    {{- end }}
+  </div>
+</div>
+{{ end }}

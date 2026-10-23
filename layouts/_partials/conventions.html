@@ -1,0 +1,16 @@
+{{- with hugo.Data.conventions }}
+{{- with .notation }}
+<div class="rail-box">
+  <div class="rail-title">Notation</div>
+  <table class="notation">
+    {{- range . }}<tr><td>\({{ index . 0 | safeHTML }}\)</td><td>{{ index . 1 }}</td></tr>{{ end }}
+  </table>
+</div>
+{{- end }}
+{{- with .signs }}
+<div class="rail-box">
+  <div class="rail-title">Conventions</div>
+  <ul class="plain-list small">{{ range . }}<li>{{ . | safeHTML }}</li>{{ end }}</ul>
+</div>
+{{- end }}
+{{- end }}

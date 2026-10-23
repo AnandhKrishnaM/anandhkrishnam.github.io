@@ -1,0 +1,30 @@
+{{- /* One subject or tag: everything filed under it, grouped by kind. */ -}}
+{{ define "main" }}
+<div class="list-shell wrap" style="--subject: {{ .Params.color | default "var(--accent)" | safeCSS }}">
+  {{ partial "list-header.html" . }}
+  {{- $all := where .Pages "Params.hidden" "!=" true }}
+  {{- $series := where (where $all "Kind" "section") "Section" "lectures" }}
+  {{- with $series }}
+  <section class="subject-group">
+    <h2 class="group-title">Lecture series</h2>
+    <div class="series-grid">{{ range . }}{{ partial "series-card.html" . }}{{ end }}</div>
+  </section>
+  {{- end }}
+  {{- $pages := where $all "Kind" "page" }}
+  {{- range $sec := slice "notes" "lectures" "thoughts" }}
+    {{- with where $pages "Section" $sec }}
+    <section class="subject-group">
+      <h2 class="group-title">{{ index (dict "notes" "Notes" "lectures" "Lectures" "thoughts" "Essays") $sec }}</h2>
+      <ul class="plain-entries">{{ range .ByDate.Reverse }}{{ partial "entry.html" (dict "page" .) }}{{ end }}</ul>
+    </section>
+    {{- end }}
+  {{- end }}
+  {{- with where $pages "Section" "not in" (slice "notes" "lectures" "thoughts") }}
+  <section class="subject-group">
+    <h2 class="group-title">Elsewhere</h2>
+    <ul class="plain-entries">{{ range .ByDate.Reverse }}{{ partial "entry.html" (dict "page" . "showSection" true) }}{{ end }}</ul>
+  </section>
+  {{- end }}
+  {{- if not $all }}<p class="empty">Nothing filed here yet.</p>{{ end }}
+</div>
+{{ end }}

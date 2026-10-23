@@ -1,0 +1,65 @@
+{{- /* /now page, built from data/now.yaml. Sections without entries are skipped. */ -}}
+{{ define "main" }}
+{{- $n := hugo.Data.now }}
+{{- $fmt := site.Params.dateFormat | default "2 January 2006" }}
+<div class="list-shell wrap narrow now-page">
+  <header class="list-header">
+    <h1 class="page-title">{{ .Title }}</h1>
+    <p class="page-meta">
+      {{- with $n.updated }}Updated {{ (time .).Format $fmt }}{{ end }}
+      {{- with $n.location }}<span class="sep" aria-hidden="true">·</span>{{ . }}{{ end }}
+    </p>
+    <p class="page-subtitle">What I am working on and reading at the moment. This is a <a href="https://nownownow.com/about">now page</a>.</p>
+  </header>
+  {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+
+  {{- with $n.working_on }}
+  <section>
+    <h2 class="group-title">Working on</h2>
+    <ul class="now-list">
+      {{- range . }}<li>{{ with .link }}<a href="{{ . | relURL }}">{{ end }}{{ .text | markdownify }}{{ with .link }}</a>{{ end }}</li>{{ end }}
+    </ul>
+  </section>
+  {{- end }}
+
+  {{- with $n.reading }}
+  <section>
+    <h2 class="group-title">Reading</h2>
+    <ul class="plain-entries">
+      {{- range . }}{{ partial "now-book.html" . }}{{ end }}
+    </ul>
+  </section>
+  {{- end }}
+
+  {{- with $n.courses }}
+  <section>
+    <h2 class="group-title">Courses</h2>
+    <ul class="plain-entries">
+      {{- range . }}
+      <li class="row"><span class="row-main">{{ .title }}{{ with .where }}<span class="row-desc">{{ . }}</span>{{ end }}</span><span class="row-meta">{{ .role }}</span></li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end }}
+
+  {{- with $n.upcoming }}
+  <section>
+    <h2 class="group-title">Coming up</h2>
+    <ul class="plain-entries">
+      {{- range . }}
+      <li class="row"><span class="row-main">{{ .what | markdownify }}{{ with .where }}<span class="row-desc">{{ . }}</span>{{ end }}</span><span class="row-meta">{{ .when }}</span></li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end }}
+
+  {{- with $n.finished }}
+  <section>
+    <h2 class="group-title">Recently finished</h2>
+    <ul class="plain-entries">
+      {{- range . }}{{ partial "now-book.html" . }}{{ end }}
+    </ul>
+  </section>
+  {{- end }}
+</div>
+{{ end }}

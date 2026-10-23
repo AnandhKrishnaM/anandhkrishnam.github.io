@@ -1,0 +1,20 @@
+{{- /* Local-only page: the same sample set in every preset of data/typefaces.yaml. */ -}}
+{{ define "main" }}
+{{- $current := site.Params.fonts.typeface }}
+<div class="list-shell fonts-compare">
+  <header class="list-header">
+    <h1 class="page-title">{{ .Title }}</h1>
+    <p class="page-subtitle">The same text in each typeface. To use one, set <code>typeface</code> in <code>hugo.toml</code> under <code>[params.fonts]</code>. This page is only visible locally.</p>
+  </header>
+  <div class="font-grid">
+    {{- range $key, $p := hugo.Data.typefaces }}
+    <section class="font-panel{{ if eq $key $current }} is-current{{ end }}" style="{{ partial "font-vars.html" (dict "preset" $key) | safeCSS }}">
+      <p class="font-label">{{ $p.name }}<span class="sep" aria-hidden="true">·</span><code>typeface = "{{ $key }}"</code>{{ if eq $key $current }}<span class="sep" aria-hidden="true">·</span>current{{ end }}</p>
+      <h2 class="page-title">A note on Birkhoff’s theorem</h2>
+      <p class="page-meta">22 December 2025<span class="sep" aria-hidden="true">·</span>Physics</p>
+      <div class="prose">{{ $.Content }}</div>
+    </section>
+    {{- end }}
+  </div>
+</div>
+{{ end }}

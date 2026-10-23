@@ -1,0 +1,9 @@
+{{- /* A book or paper on the /now page: title, author, optional note, link, date. */ -}}
+<li class="row">
+  <span class="row-main">
+    {{- with .link }}<a href="{{ . }}">{{ end }}<cite class="book-title">{{ .title }}</cite>{{ with .link }}</a>{{ end }}
+    {{- with .author }}<span class="book-author">, {{ . }}</span>{{ end }}
+    {{- with .note }}<span class="row-desc">{{ . | markdownify }}</span>{{ end }}
+  </span>
+  <span class="row-meta">{{ .when }}</span>
+</li>

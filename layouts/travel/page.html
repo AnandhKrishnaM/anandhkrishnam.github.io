@@ -1,0 +1,48 @@
+{{- /* One trip: cover photo with title, write-up, photo gallery. */ -}}
+{{ define "main" }}
+{{- $photos := partial "trip-photos.html" . }}
+{{- $cover := partial "trip-cover.html" . }}
+{{- $meta := slice }}{{ with .Params.place }}{{ $meta = $meta | append . }}{{ end }}{{ with .Params.dates }}{{ $meta = $meta | append . }}{{ end }}
+<article class="trip">
+  {{- with $cover }}
+  {{- $c := .Process "fill 1920x820 Smart webp q80" }}
+  <header class="trip-hero">
+    <img class="trip-hero-img" src="{{ $c.RelPermalink }}" width="{{ $c.Width }}" height="{{ $c.Height }}" alt="">
+    <div class="trip-hero-shade" aria-hidden="true"></div>
+    <div class="trip-hero-inner">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ $.Parent.RelPermalink }}">{{ $.Parent.LinkTitle }}</a></nav>
+      <h1 class="page-title">{{ $.Title }}{{ if $.Draft }} <span class="draft-mark">draft</span>{{ end }}</h1>
+      {{ with $meta }}<p class="page-meta">{{ delimit . `<span class="sep" aria-hidden="true">·</span>` | safeHTML }}</p>{{ end }}
+    </div>
+  </header>
+  {{- else }}
+  <header class="list-shell wrap narrow trip-plain-header">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ .Parent.RelPermalink }}">{{ .Parent.LinkTitle }}</a></nav>
+    <h1 class="page-title">{{ .Title }}{{ if .Draft }} <span class="draft-mark">draft</span>{{ end }}</h1>
+    {{ with $meta }}<p class="page-meta">{{ delimit . `<span class="sep" aria-hidden="true">·</span>` | safeHTML }}</p>{{ end }}
+  </header>
+  {{- end }}
+
+  <div class="wrap narrow trip-body">
+    {{ with .Description }}<p class="page-subtitle">{{ . | markdownify }}</p>{{ end }}
+    <div class="prose">{{ partial "content.html" . }}</div>
+  </div>
+
+  {{- with $photos }}
+  <section class="trip-gallery" aria-label="Photographs">
+    <div class="gallery-grid" data-lightbox>
+      {{- range . }}
+      {{- $t := .img.Process "fill 720x540 Smart webp q78" }}
+      {{- $l := .img.Process "fit 2200x2200 webp q82" }}
+      <figure class="ph">
+        <a href="{{ $l.RelPermalink }}" data-caption="{{ .caption }}"><img src="{{ $t.RelPermalink }}" width="{{ $t.Width }}" height="{{ $t.Height }}" alt="{{ .caption | default $.Title }}" loading="lazy"></a>
+        {{ with .caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+      </figure>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+
+  <div class="wrap narrow">{{ partial "prev-next.html" . }}</div>
+</article>
+{{ end }}

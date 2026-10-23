@@ -1,0 +1,9 @@
+{{- /* Maturity / progress badge.
+       Notes & thoughts: seedling · budding · evergreen
+       Lectures:         planned · draft · ongoing · complete       */ -}}
+{{- $icons := dict "seedling" "🌱" "budding" "🌿" "evergreen" "🌳" -}}
+{{- if .Draft }}<span class="badge badge-draft" title="Draft — only visible locally">draft</span>{{ end -}}
+{{- with .Params.status }}
+  {{- $s := lower . }}
+  <span class="badge badge-{{ $s }}" title="{{ humanize $s }}">{{ with index $icons $s }}<span aria-hidden="true">{{ . }}</span> {{ end }}{{ $s }}</span>
+{{- end -}}

@@ -1,0 +1,68 @@
+{{- /* /lectures/ lists the series; /lectures/<series>/ lists its chapters,
+       written ones linked and planned ones (from `planned:`) in grey. */ -}}
+{{ define "main" }}
+{{- if eq .CurrentSection.Parent.Kind "home" }}
+<div class="list-shell wrap narrow">
+  {{ partial "list-header.html" . }}
+  <ul class="plain-entries">
+    {{- range .Sections.ByWeight }}{{ partial "series-row.html" . }}{{ end }}
+  </ul>
+  {{- with .RegularPages }}
+  <h2 class="group-title">Single lectures and talks</h2>
+  <ul class="plain-entries">{{ range .ByDate.Reverse }}{{ partial "entry.html" (dict "page" .) }}{{ end }}</ul>
+  {{- end }}
+</div>
+{{- else }}
+<div class="list-shell wrap narrow">
+  <header class="list-header">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ .Parent.RelPermalink }}">{{ .Parent.LinkTitle }}</a></nav>
+    <h1 class="page-title">{{ .Title }}{{ if .Draft }} <span class="draft-mark">draft</span>{{ end }}</h1>
+    {{- $meta := slice }}
+    {{- with .Params.lecturer }}{{ $meta = $meta | append . }}{{ end }}
+    {{- with .Params.venue }}{{ $meta = $meta | append . }}{{ end }}
+    {{- with .Params.period }}{{ $meta = $meta | append . }}{{ end }}
+    {{ with $meta }}<p class="page-meta">{{ delimit . ", " }}</p>{{ end }}
+    {{ with .Description }}<p class="page-subtitle">{{ . | markdownify }}</p>{{ end }}
+  </header>
+  {{ partial "resources.html" . }}
+  {{ with .Content }}<div class="prose series-intro">{{ . }}</div>{{ end }}
+
+  {{- /* Written chapters and planned ones, merged and sorted by chapter number.
+         Planned items are plain titles or {title, chapter, status}. */}}
+  {{- $start := .Params.startAt | default 1 }}
+  {{- $items := slice }}{{ $max := sub $start 1 }}
+  {{- range $i, $p := .RegularPages.ByWeight }}
+    {{- $n := $p.Params.chapter | default (add $i $start) }}
+    {{- $items = $items | append (dict "num" $n "page" $p) }}
+    {{- if gt $n $max }}{{ $max = $n }}{{ end }}
+  {{- end }}
+  {{- range .Params.planned }}
+    {{- $title := . }}{{ $n := 0 }}
+    {{- if reflect.IsMap . }}{{ $title = .title }}{{ $n = .chapter | default 0 }}{{ end }}
+    {{- if not $n }}{{ $max = add $max 1 }}{{ $n = $max }}{{ end }}
+    {{- $items = $items | append (dict "num" $n "title" $title) }}
+  {{- end }}
+  {{- with $items }}
+  <h2 class="group-title">Contents</h2>
+  <ol class="chapters">
+    {{- range sort . "num" }}
+    {{- with .page }}
+    <li class="chapter">
+      <span class="ch-num">{{ partial "chapter-number.html" . }}</span>
+      <span class="ch-main"><a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ if .Draft }} <span class="draft-mark">draft</span>{{ end }}</span>
+      <span class="ch-meta">{{ with .Params.pdf }}PDF · {{ end }}{{ .Date.Format "Jan 2006" }}</span>
+    </li>
+    {{- else }}
+    <li class="chapter is-planned">
+      <span class="ch-num">§{{ .num }}</span>
+      <span class="ch-main">{{ .title | markdownify }}</span>
+      <span class="ch-meta">in preparation</span>
+    </li>
+    {{- end }}
+    {{- end }}
+  </ol>
+  {{- end }}
+  {{ partial "references.html" . }}
+</div>
+{{- end }}
+{{ end }}

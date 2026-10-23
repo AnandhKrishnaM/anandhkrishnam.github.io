@@ -1,0 +1,350 @@
+#!/bin/zsh
+# ═══════════════════════════════════════════════════════════════════════════
+#  ./site — everyday commands for writing, previewing and publishing.
+#  Run `./site help` for the list.
+# ═══════════════════════════════════════════════════════════════════════════
+set -e
+cd "${0:A:h}"
+HUGO=${HUGO:-hugo}
+
+bold=$'\e[1m'; dim=$'\e[2m'; green=$'\e[32m'; red=$'\e[31m'; off=$'\e[0m'
+say()  { print -r -- "${green}✓${off} $*"; }
+die()  { print -r -- "${red}✗${off} $*" >&2; exit 1; }
+need_hugo() { command -v $HUGO >/dev/null 2>&1 || die "Hugo is not installed. Install it with:  brew install hugo"; }
+
+slugify() {
+  print -r -- "$1" | sed -e "s/['’]//g" -e 's/[–—‐−]/-/g' | iconv -c -f UTF-8 -t ASCII//TRANSLIT 2>/dev/null \
+    | tr -d "\"^\`~'" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
+}
+
+# set_field FILE KEY VALUE — replace the first "KEY:" line of the front matter
+set_field() {
+  local file=$1 key=$2 value=$3 tmp=$(mktemp)
+  awk -v k="$key" -v v="$value" 'BEGIN{done=0} !done && $0 ~ "^"k":" {print k": "v; done=1; next} {print}' "$file" > "$tmp"
+  mv "$tmp" "$file"
+}
+quote() { print -r -- "\"${1//\"/\\\"}\""; }
+as_list() { local out="" s; for s in "$@"; do out+="${out:+, }$(slugify $s)"; done; print -r -- "[$out]"; }
+
+open_file() {
+  say "Created ${bold}$1${off}"
+  [[ -n $EDITOR ]] && $EDITOR "$1" || true
+}
+
+cmd_serve() {
+  need_hugo
+  print -r -- "${dim}Drafts included · live reload · Ctrl-C to stop${off}"
+  exec $HUGO server --buildDrafts --buildFuture --navigateToChanged --bind 127.0.0.1 --port "${1:-1313}" --openBrowser
+}
+
+cmd_preview() {
+  need_hugo
+  print -r -- "${dim}Exactly what will be published: no drafts, minified · Ctrl-C to stop${off}"
+  exec $HUGO server --environment production --bind 127.0.0.1 --port "${1:-1314}" --openBrowser
+}
+
+cmd_build() { need_hugo; $HUGO --gc --minify "$@"; say "Built into ./public"; }
+
+cmd_new() {
+  need_hugo
+  local kind=$1; shift || true
+  case $kind in
+    note)
+      [[ $# -ge 2 ]] || die 'usage: ./site new note <subject> "Title"'
+      local subj=$(slugify $1) title=$2 slug=$(slugify $2)
+      [[ -d content/notes/$subj ]] || die "No subject '$subj'. Create it first:  ./site new subject \"$1\""
+      local f=content/notes/$subj/$slug.md
+      [[ -e $f ]] && die "$f already exists"
+      $HUGO new content "notes/$subj/$slug.md" >/dev/null
+      set_field $f title "$(quote $title)"
+      open_file $f ;;
+    thought)
+      [[ $# -ge 1 ]] || die 'usage: ./site new thought "Title" [subject…]'
+      local title=$1 slug=$(slugify $1); shift
+      local f=content/thoughts/$slug.md
+      [[ -e $f ]] && die "$f already exists"
+      $HUGO new content "thoughts/$slug.md" >/dev/null
+      set_field $f title "$(quote $title)"
+      [[ $# -gt 0 ]] && set_field $f subjects "$(as_list "$@")"
+      open_file $f ;;
+    series)
+      [[ $# -ge 1 ]] || die 'usage: ./site new series "Title" [subject…]'
+      local title=$1 slug=$(slugify $1); shift
+      local f=content/lectures/$slug/_index.md
+      [[ -e $f ]] && die "$f already exists"
+      $HUGO new content --kind series "lectures/$slug/_index.md" >/dev/null
+      set_field $f title "$(quote $title)"
+      if [[ $# -gt 0 ]]; then
+        local l=$(as_list "$@") tmp=$(mktemp)
+        sed -E "s/^subjects: \[\]/subjects: $l/; s/^  subjects: \[\]/  subjects: $l/" $f > $tmp && mv $tmp $f
+      fi
+      open_file $f
+      print -r -- "${dim}Add lectures with:  ./site new lecture $slug \"First lecture\"${off}" ;;
+    lecture)
+      [[ $# -ge 2 ]] || die 'usage: ./site new lecture <series-folder> "Title"'
+      local series=$1 title=$2 slug=$(slugify $2)
+      [[ -d content/lectures/$series ]] || die "No series content/lectures/$series  (series: $(ls content/lectures | grep -v _index | tr '\n' ' '))"
+      local n=$(ls content/lectures/$series | grep -v '^_index' | grep -c . || true)
+      local f=content/lectures/$series/$slug.md
+      [[ -e $f ]] && die "$f already exists"
+      $HUGO new content "lectures/$series/$slug.md" >/dev/null
+      set_field $f title "$(quote $title)"
+      set_field $f weight "$(( (n + 1) * 10 ))"
+      open_file $f ;;
+    subject)
+      [[ $# -ge 1 ]] || die 'usage: ./site new subject "Name" [symbol]'
+      local name=$1 slug=$(slugify $1) sym=${2:-§}
+      [[ -e content/subjects/$slug/_index.md ]] && die "Subject '$slug' already exists"
+      local w=$(( ($(ls -d content/subjects/*/ 2>/dev/null | wc -l) + 1) * 10 ))
+      $HUGO new content --kind subject "subjects/$slug/_index.md" >/dev/null
+      set_field content/subjects/$slug/_index.md title "$(quote $name)"
+      set_field content/subjects/$slug/_index.md symbol "$(quote $sym)"
+      set_field content/subjects/$slug/_index.md weight "$w"
+      mkdir -p content/notes/$slug
+      print -r -- "---
+title: $(quote $name)
+weight: $w
+cascade:
+  subjects: [$slug]
+---" > content/notes/$slug/_index.md
+      say "Created subject ${bold}$name${off}: content/subjects/$slug/ (description, colour) and content/notes/$slug/ (its notes)" ;;
+    trip)
+      [[ $# -ge 1 ]] || die 'usage: ./site new trip "Title" ["Place, Country"]'
+      local title=$1 slug=$(slugify $1) place=${2:-}
+      local f=content/travel/$slug/index.md
+      [[ -e $f ]] && die "$f already exists"
+      $HUGO new content "travel/$slug/index.md" >/dev/null
+      set_field $f title "$(quote $title)"
+      [[ -n $place ]] && set_field $f place "$(quote $place)"
+      open_file $f
+      print -r -- "${dim}Add photos with:  ./site photos $slug ~/Pictures/…/*.jpg   (then set lat / lon for the map)${off}" ;;
+    *) die 'usage: ./site new note|thought|series|lecture|subject|trip …   (see ./site help)' ;;
+  esac
+}
+
+cmd_import() {
+  # ./site import <note.md> <subject> [--publish]
+  [[ $# -ge 2 ]] || die 'usage: ./site import <obsidian-note.md> <subject | lectures/series> [--publish]'
+  local src=$1 draft=1 dir
+  [[ $3 == --publish ]] && draft=0
+  [[ -f $src ]] || die "No such file: $src"
+  if [[ $2 == lectures/* ]]; then
+    dir=content/$2
+    [[ -d $dir ]] || die "No series $dir. Create it first:  ./site new series \"Title\""
+  else
+    dir=content/notes/$(slugify $2)
+    [[ -d $dir ]] || die "No subject '$(slugify $2)'. Create it first:  ./site new subject \"$2\""
+  fi
+  local name=${${src:t}:r} slug=$(slugify ${${src:t}:r})
+  local dest=$dir/$slug.md
+  [[ -e $dest ]] && die "$dest already exists"
+  local vault=${OBSIDIAN_VAULT:-${src:h}}
+  local date=$(stat -f %Sm -t %Y-%m-%dT%H:%M:%S "$src")
+
+  if head -1 "$src" | grep -q '^---[[:space:]]*$'; then
+    awk -v d="$date" -v t="$name" -v draft="$draft" '
+      NR==1 { print; infm=1; next }
+      infm && /^---[ \t]*$/ {
+        if (!hastitle) print "title: \"" t "\""
+        if (!hasdate)  print "date: " d
+        if (draft=="1" && !hasdraft) print "draft: true"
+        print; infm=0; next }
+      infm && /^title:/   { hastitle=1 }
+      infm && /^date:/    { hasdate=1 }
+      infm && /^draft:/   { hasdraft=1 }
+      infm && /^aliases:/ { sub(/^aliases:/, "wikialiases:") }
+      { print }' "$src" > "$dest"
+  else
+    { print -r -- "---"; print -r -- "title: \"$name\""; print -r -- "date: $date"
+      [[ $draft == 1 ]] && print -r -- "draft: true"
+      print -r -- "---"; print; cat "$src"; } > "$dest"
+  fi
+  # Obsidian tolerates typos in callout types such as >[!Notes$]; Hugo does not,
+  # and a stray $ would then throw off every equation after it. Keep letters only.
+  local tmp=$(mktemp) fixed
+  awk '{
+    if (match($0, /^>[> ]*\[![^]]*\]/)) {
+      pre = substr($0, 1, RSTART - 1); m = substr($0, RSTART, RLENGTH); rest = substr($0, RSTART + RLENGTH)
+      i = index(m, "[!"); type = substr(m, i + 2, length(m) - i - 2); clean = type
+      gsub(/[^A-Za-z]/, "", clean)
+      if (clean != type) { n++; print "  fixed callout [!" type "] → [!" clean "]" > "/dev/stderr" }
+      $0 = pre substr(m, 1, i + 1) clean "]" rest
+    }
+    print }' "$dest" > "$tmp" && mv "$tmp" "$dest"
+
+  fixmath_file "$dest"
+  say "Imported ${bold}$dest${off}$([[ $draft == 1 ]] && print ' (as a draft — remove draft: true to publish)')"
+
+  # copy embedded attachments: ![[file.png]]
+  local f found copied=0
+  for f in ${(f)"$(grep -o '!\[\[[^]|#]*\.[A-Za-z0-9]*' "$src" | sed 's/^!\[\[//' | sort -u)"}; do
+    [[ -z $f ]] && continue
+    found=$(find "$vault" -type f -name "${f:t}" -not -path '*/.trash/*' 2>/dev/null | head -1)
+    if [[ -n $found ]]; then cp "$found" "static/attachments/${f:t}"; copied=$((copied+1))
+    else print -r -- "  ${dim}attachment not found in $vault: $f${off}"; fi
+  done
+  (( copied )) && say "Copied $copied attachment(s) to static/attachments/"
+  return 0
+}
+
+# fixmath FILE… — make display maths survive the markdown parser.
+# Obsidian accepts blank lines inside $$…$$ and lines beginning with - or +;
+# markdown would read those as a paragraph break or a list item. Blank lines
+# are dropped (TeX ignores them) and such lines get an empty group {} in
+# front, which typesets identically.
+fixmath_file() {
+  local f=$1 tmp=$(mktemp)
+  awk '
+    function body(s) { sub(/^[ \t]*(>[ \t]?)*/, "", s); return s }
+    function prefix(s) { match(s, /^[ \t]*(>[ \t]?)*/); return substr(s, 1, RLENGTH) }
+    /^```/ && !inmath { code = !code }
+    code { print; next }
+    {
+      b = body($0); p = prefix($0)
+      if (inmath) {
+        if (b ~ /^[ \t]*$/) { n++; next }                                   # blank line inside maths
+        if (b ~ /^[ \t]*([-+*][ \t]|#{1,6}([ \t]|$)|[0-9]+[.)][ \t]|[-+*]$)/) { $0 = p "{}" b; n++ }
+      }
+      t = b; gsub(/`[^`]*`/, "", t); c = gsub(/\$\$/, "", t)
+      if (!env && c % 2 == 1) inmath = !inmath
+      else if (!inmath && b ~ /^[ \t]*\\begin\{[A-Za-z]+\*?\}/ && b !~ /\\end\{/) { inmath = 1; env = 1 }
+      else if (env && b ~ /\\end\{[A-Za-z]+\*?\}/) { inmath = 0; env = 0 }
+      print
+    }
+    END { if (n) print "  " FILENAME ": " n " fix(es)" > "/dev/stderr" }' "$f" > "$tmp" && mv "$tmp" "$f"
+}
+cmd_fixmath() {
+  local files=("$@")
+  (( $# )) || files=(${(f)"$(find content -name '*.md')"})
+  local f; for f in $files; do fixmath_file "$f"; done
+  say "Checked ${#files} file(s) for display maths that markdown would break"
+}
+
+cmd_photos() {
+  # ./site photos <trip> <files…>: copy photos into a trip, resized to at most
+  # 2400 px, correctly rotated, and with ALL metadata (GPS location, camera,
+  # time) removed — the repository is public.
+  [[ $# -ge 2 ]] || die 'usage: ./site photos <trip-folder> <photo files…>'
+  local trip=$1; shift
+  local dir=content/travel/$trip
+  [[ -d $dir ]] || die "No trip $dir  (trips: $(ls content/travel | grep -v _index | tr '\n' ' '))"
+  command -v ffmpeg >/dev/null || die "ffmpeg is needed:  brew install ffmpeg"
+  local f ext base out tmp n=0 skipped=0
+  for f in "$@"; do
+    [[ -f $f ]] || { print -r -- "  ${dim}not a file: $f${off}"; continue; }
+    ext=${${f:e}:l}; base=$(slugify ${f:t:r})
+    case $ext in
+      jpg|jpeg|png|heic|heif|tif|tiff|webp) ;;
+      *) print -r -- "  ${dim}skipped (not a photo): ${f:t}${off}"; skipped=$((skipped+1)); continue ;;
+    esac
+    out=$dir/$base.jpg
+    tmp=$f
+    if [[ $ext != jpg && $ext != jpeg && $ext != webp ]]; then
+      tmp=$(mktemp -t photo).jpg; sips -s format jpeg "$f" --out "$tmp" >/dev/null 2>&1 || { print -r -- "  ${dim}could not convert ${f:t}${off}"; continue; }
+    fi
+    ffmpeg -v error -y -i "$tmp" -vf "scale='if(gt(iw,ih),min(2400,iw),-2)':'if(gt(iw,ih),-2,min(2400,ih))'" -map_metadata -1 -q:v 3 "$out" || { print -r -- "  ${dim}failed: ${f:t}${off}"; continue; }
+    [[ $tmp != $f ]] && rm -f "$tmp"
+    n=$((n+1))
+  done
+  say "Added $n photo(s) to $dir — resized, rotated, metadata (incl. GPS) removed$( ((skipped)) && print " · $skipped skipped")"
+  print -r -- "${dim}Captions and order: list them under photos: in $dir/index.md${off}"
+}
+
+cmd_now() {
+  # stamp today's date on the /now page and open its data file
+  local f=data/now.yaml tmp=$(mktemp)
+  awk -v d="$(date +%Y-%m-%d)" '/^updated:/ && !done { print "updated: " d; done=1; next } { print }' $f > $tmp && mv $tmp $f
+  say "/now page dated $(date +"%-d %B %Y"). Edit ${bold}$f${off}: working_on, reading, finished, courses, upcoming."
+  if [[ -n $EDITOR ]]; then $EDITOR $f; else open -t $f 2>/dev/null || true; fi
+}
+
+cmd_drafts() { need_hugo; $HUGO list drafts | awk -F, 'NR>1 {print "  " $1}'; }
+
+cmd_doctor() {
+  print -r -- "${bold}Hugo${off}     $(command -v $HUGO >/dev/null && $HUGO version | cut -d' ' -f1-2 || print 'not installed — brew install hugo')"
+  print -r -- "${bold}Workflow${off} pins Hugo $(grep -m1 'HUGO_VERSION:' .github/workflows/deploy.yml | awk '{print $2}') for GitHub Pages"
+  if git --version >/dev/null 2>&1; then
+    print -r -- "${bold}git${off}      $(git --version)"
+    if git rev-parse --git-dir >/dev/null 2>&1; then
+      print -r -- "${bold}remote${off}   $(git remote get-url origin 2>/dev/null || print 'none — see README, "Publish to GitHub Pages"')"
+    else print -r -- "${bold}repo${off}     not a git repository yet — see README"; fi
+  else
+    print -r -- "${bold}git${off}      unavailable — on macOS run: sudo xcodebuild -license accept"
+  fi
+}
+
+# Drafts stay on this Mac: every file marked draft: true (and the folder of a
+# draft that is a page bundle or a section) is listed in .git/info/exclude and,
+# if it was committed earlier, removed from the repository (not from disk).
+exclude_drafts() {
+  need_hugo
+  local ex=.git/info/exclude tmp=$(mktemp) p entries=()
+  for p in ${(f)"$($HUGO list drafts 2>/dev/null | awk -F, 'NR>1 {print $1}')"}; do
+    [[ -z $p ]] && continue
+    if [[ ${p:t} == index.md || ${p:t} == _index.md ]]; then entries+=("/${p:h}/"); else entries+=("/$p"); fi
+  done
+  awk '/^# >>> drafts \(managed by \.\/site\)/{skip=1} !skip{print} /^# <<< drafts/{skip=0}' $ex > $tmp 2>/dev/null
+  { print -r -- "# >>> drafts (managed by ./site)"; for p in $entries; do print -r -- "$p"; done; print -r -- "# <<< drafts"; } >> $tmp
+  mv $tmp $ex
+  for p in $entries; do git rm -r -q --cached --ignore-unmatch -- "${p#/}" >/dev/null 2>&1; done
+  print -r -- "${dim}Keeping ${#entries} draft(s) off GitHub (local only).${off}"
+}
+
+cmd_publish() {
+  git rev-parse --git-dir >/dev/null 2>&1 || die "Not a git repository yet — see README, 'Publish to GitHub Pages'."
+  exclude_drafts
+  git add -A
+  git status --short
+  [[ -z $(git status --porcelain) ]] && { say "Nothing to publish."; return; }
+  local msg=${1:-"Update site $(date +%Y-%m-%d)"}
+  read -q "?Commit all of the above as \"$msg\" and push? [y/N] " || { print; return; }
+  print; git commit -q -m "$msg" && git push && say "Pushed — GitHub Actions will deploy in a minute or two."
+}
+
+cmd_help() {
+  cat <<EOF
+${bold}./site${off} — write, preview and publish the website
+
+  ${bold}serve${off} [port]                      live preview with drafts   → http://localhost:1313
+  ${bold}preview${off} [port]                    exactly what gets published → http://localhost:1314
+  ${bold}build${off}                             build the static site into ./public
+
+  ${bold}new note${off} <subject> "Title"        content/notes/<subject>/title.md
+  ${bold}new thought${off} "Title" [subject…]    content/thoughts/title.md
+  ${bold}new series${off} "Title" [subject…]     content/lectures/title/_index.md
+  ${bold}new lecture${off} <series> "Title"      content/lectures/<series>/title.md
+  ${bold}new subject${off} "Name" [symbol]       a new subject (e.g. biology, music)
+  ${bold}new trip${off} "Title" ["Place"]        content/travel/title/ — a trip with photos
+  ${bold}photos${off} <trip> <files…>             add photos to a trip (resized, GPS removed)
+
+  ${bold}import${off} <note.md> <subject>        copy an Obsidian note (+ its images) in, as a draft
+  ${bold}import${off} <note.md> lectures/<series>  …or into a lecture series
+          [--publish]                  …or publish it straight away
+
+  ${bold}fixmath${off} [file…]                  repair \$\$…\$\$ blocks Obsidian accepts but markdown breaks
+  ${bold}now${off}                               update the /now page (dates it today, opens the file)
+  ${bold}drafts${off}                            list everything still marked draft
+  ${bold}doctor${off}                            check Hugo / git / GitHub setup
+  ${bold}publish${off} ["message"]               commit everything and push (deploys automatically)
+
+New pages start as drafts: visible with ${bold}serve${off}, hidden when published.
+Set ${bold}EDITOR${off} (e.g. export EDITOR="code") to open new files automatically.
+EOF
+}
+
+case ${1:-help} in
+  serve|s)    shift; cmd_serve "$@" ;;
+  preview)    shift; cmd_preview "$@" ;;
+  build)      shift; cmd_build "$@" ;;
+  new|n)      shift; cmd_new "$@" ;;
+  import)     shift; cmd_import "$@" ;;
+  fixmath)    shift; cmd_fixmath "$@" ;;
+  photos)     shift; cmd_photos "$@" ;;
+  now)        cmd_now ;;
+  drafts)     cmd_drafts ;;
+  doctor)     cmd_doctor ;;
+  publish)    shift; cmd_publish "$@" ;;
+  _exclude-drafts) exclude_drafts ;;
+  help|-h|--help) cmd_help ;;
+  *) die "Unknown command '$1'. Try ./site help" ;;
+esac

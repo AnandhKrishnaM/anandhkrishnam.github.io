@@ -1,0 +1,6 @@
+{{- /* Returns {written, planned, total, percent} for a lecture series section. */ -}}
+{{- $written := len .RegularPages }}
+{{- $planned := len (.Params.planned | default slice) }}
+{{- $total := add $written $planned }}
+{{- $percent := 0 }}{{ if gt $total 0 }}{{ $percent = div (mul $written 100) $total }}{{ end }}
+{{- return (dict "written" $written "planned" $planned "total" $total "percent" $percent) -}}

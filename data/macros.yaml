@@ -1,0 +1,19 @@
+# LaTeX macros available in every equation on the site.
+# A string is a plain macro; [definition, n] takes n arguments (#1, #2, …).
+# Single quotes keep backslashes literal.
+R:    '\mathbb{R}'
+C:    '\mathbb{C}'
+N:    '\mathbb{N}'
+Z:    '\mathbb{Z}'
+dd:   '\mathrm{d}'
+Ric:  '\mathrm{Ric}'
+Riem: '\mathrm{Riem}'
+Lie:  '\mathcal{L}'
+Scri: '\mathscr{I}'
+vol:  '\mathrm{vol}'
+tr:   '\operatorname{tr}'
+pd:   ['\partial_{#1}', 1]
+covd: ['\nabla_{#1}', 1]
+abs:  ['\left\lvert #1 \right\rvert', 1]
+norm: ['\left\lVert #1 \right\rVert', 1]
+ip:   ['\left\langle #1, #2 \right\rangle', 2]

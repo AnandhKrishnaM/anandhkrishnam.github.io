@@ -1,0 +1,33 @@
+{{- /* CV page: every section of data/cv.yaml in order, as dated rows. */ -}}
+{{ define "main" }}
+{{- $a := site.Params.author }}
+<div class="list-shell wrap narrow cv">
+  <header class="list-header">
+    <h1 class="page-title">{{ .Title }}</h1>
+    <p class="page-subtitle">{{ $a.name }}{{ with $a.native }}<span class="sep" aria-hidden="true">·</span><span class="native-name" lang="{{ $a.nativeLang | default "ml" }}">{{ . }}</span>{{ end }}</p>
+    {{ partial "contact.html" . }}
+  </header>
+  {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+
+  {{- range hugo.Data.cv.sections }}
+  <section class="cv-section">
+    <h2 class="cv-label">{{ .title }}</h2>
+    {{- if eq .style "timeline" }}
+      {{ partial "cv-timeline.html" .items }}
+    {{- else if eq .style "awards" }}
+      <ul class="cv-rows">{{ range .items }}<li><span class="cv-when">{{ .when }}</span><span><span class="cv-what">{{ .name }}</span>{{ with .by }}, {{ . }}{{ end }}</span></li>{{ end }}</ul>
+    {{- else if eq .style "skills" }}
+      <ul class="cv-rows">{{ range .items }}<li><span class="cv-when">{{ .group }}</span><span>{{ delimit .items ", " }}</span></li>{{ end }}</ul>
+    {{- else if eq .style "text" }}
+      <p class="cv-plain">{{ .text | markdownify }}</p>
+    {{- else }}
+      <ul class="cv-rows">
+        {{- range .items }}
+        <li><span class="cv-when">{{ .when }}</span><span>{{ with .link }}<a href="{{ . | relURL }}">{{ end }}{{ .what | markdownify }}{{ with .link }}</a>{{ end }}{{ with .where }}, <span class="cv-where">{{ . }}</span>{{ end }}</span></li>
+        {{- end }}
+      </ul>
+    {{- end }}
+  </section>
+  {{- end }}
+</div>
+{{ end }}

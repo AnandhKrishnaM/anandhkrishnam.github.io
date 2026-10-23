@@ -1,0 +1,7 @@
+{{ define "main" }}
+<div class="home">
+  {{- range site.Params.home.blocks | default (slice "hero" "subjects" "recent" "lectures" "quote") }}
+    {{- partial (printf "home/%s.html" .) $ }}
+  {{- end }}
+</div>
+{{ end }}

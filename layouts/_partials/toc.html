@@ -1,0 +1,8 @@
+{{- /* Table of contents for pages with at least three headings.
+       A <details> so it folds away on small screens; main.js opens it on wide ones. */ -}}
+{{- if and site.Params.toc (ne .Params.toc false) (ge (len .Fragments.HeadingsMap) 3) }}
+<details class="toc" data-toc>
+  <summary class="toc-title">Contents</summary>
+  {{ .TableOfContents }}
+</details>
+{{- end }}

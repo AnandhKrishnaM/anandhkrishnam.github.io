@@ -1,0 +1,37 @@
+{{- $h := site.Params.hero }}
+<section class="hero" aria-label="Introduction">
+  <div class="hero-art" aria-hidden="true">
+    {{- if eq $h.art "lightcone" }}{{ partial "art/lightcone.html" . }}
+    {{- else if eq $h.art "lens" }}<svg id="hero-lens" class="lens" preserveAspectRatio="xMidYMid slice"></svg>{{ end }}
+  </div>
+  <div class="hero-grid wrap">
+    <div class="hero-text">
+      {{ with $h.eyebrow }}<p class="eyebrow">{{ . }}</p>{{ end }}
+      <h1 class="hero-title">{{ $h.title | default site.Title }}</h1>
+      {{ with $h.lede }}<p class="hero-lede">{{ . | markdownify }}</p>{{ end }}
+      {{ with .Content }}<div class="hero-intro prose-lite">{{ . }}</div>{{ end }}
+      {{ with $h.links }}
+      <nav class="hero-links" aria-label="Sections">
+        {{ range . }}<a href="{{ .url | relURL }}">{{ .name }}</a>{{ end }}
+      </nav>
+      {{ end }}
+    </div>
+
+    {{- if and $h.equations hugo.Data.equations }}
+    <aside class="eq-card" aria-label="Equation of the day">
+      {{- range $i, $e := hugo.Data.equations }}
+      <figure class="eq-item" data-eq="{{ $i }}"{{ if ne $i 0 }} hidden{{ end }}>
+        <div class="eq-label">{{ $e.label }}</div>
+        <div class="eq-tex">\[ {{ $e.tex | safeHTML }} \]</div>
+        {{ with $e.caption }}<figcaption class="eq-caption">{{ . | safeHTML }}</figcaption>{{ end }}
+      </figure>
+      {{- end }}
+      <div class="eq-nav">
+        <button type="button" class="eq-btn" data-eq-step="-1" aria-label="Previous equation">‹</button>
+        <span class="eq-hint">equation of the day</span>
+        <button type="button" class="eq-btn" data-eq-step="1" aria-label="Next equation">›</button>
+      </div>
+    </aside>
+    {{- end }}
+  </div>
+</section>

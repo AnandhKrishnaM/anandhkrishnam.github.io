@@ -1,0 +1,7 @@
+{{- with hugo.Data.now }}
+<section class="block wrap" aria-labelledby="h-now">
+  <h2 class="block-title" id="h-now">Now</h2>
+  {{ partial "now-widget.html" . }}
+  <p class="block-more"><a href="{{ "now/" | relURL }}">More on what I am doing now</a></p>
+</section>
+{{- end }}

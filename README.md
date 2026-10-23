@@ -1,8 +1,8 @@
-# anandhkrishnam.github.io
+# Personal Webpage
 
 Personal site for notes, lectures and essays on mathematics, physics and philosophy.
 Built with [Hugo](https://gohugo.io), written in Markdown that Obsidian also understands,
-math typeset by MathJax, and hosted on GitHub Pages.
+math typeset by MathJax, and hosted on GitHub Pages with the help of Claude.
 
 It merges the earlier attempts: the Jekyll site's pages, diagrams and CV; Atlas's
 theorem environments, margin notes and ⌘K search; and the portfolio's timeline.
